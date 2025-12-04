@@ -1,0 +1,78 @@
+---
+interface Category {
+  id: string;
+  name: string;
+  active?: boolean;
+}
+
+interface Props {
+  categories: Category[];
+}
+
+const { categories } = Astro.props;
+---
+
+<div class="category-filter">
+  {categories.map(category => (
+    <button 
+      class:list={['filter-btn', { active: category.active }]}
+      data-category={category.id}
+    >
+      {category.name}
+    </button>
+  ))}
+</div>
+
+<style>
+  .category-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: flex-start;
+  }
+  
+  .filter-btn {
+    padding: 16px 32px;
+    border: 1px solid var(--color-primary);
+    border-radius: 16px;
+    background: var(--color-background);
+    color: #423259;
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+  
+  .filter-btn:hover {
+    background: rgba(141, 119, 171, 0.1);
+  }
+  
+  .filter-btn.active {
+    background: var(--color-primary);
+    color: var(--color-white);
+  }
+  
+  @media (max-width: 968px) {
+    .category-filter {
+      gap: 12px;
+    }
+    
+    .filter-btn {
+      padding: 12px 24px;
+      font-size: 16px;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .filter-btn {
+      padding: 10px 16px;
+      font-size: 14px;
+      flex: 1;
+      min-width: calc(50% - 8px);
+    }
+  }
+</style>
+

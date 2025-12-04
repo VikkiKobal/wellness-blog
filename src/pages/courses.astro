@@ -1,0 +1,172 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import PageHero from '../components/PageHero.astro';
+import CategoryFilter from '../components/CategoryFilter.astro';
+import CourseCard from '../components/CourseCard.astro';
+import Pagination from '../components/Pagination.astro';
+import Footer from '../components/Footer.astro';
+import CourseModal from '../components/CourseModal.astro';
+
+const categories = [
+  { id: 'featured', name: 'Featured Courses', active: true },
+  { id: 'training', name: 'Teacher Training & Workshops', active: false },
+  { id: 'mentorship', name: 'Mentorship & Consulting', active: false },
+  { id: 'other', name: 'Other Courses & Academic Programs', active: false },
+  { id: 'speaking', name: 'Speaking & Collaborations', active: false },
+];
+
+const courses = [
+  {
+    id: "power-of-you",
+    title: "The Power of You: Resilience, Self-Care & Mindful Living in Uncertain Times",
+    description: "Discover how to build inner resilience and practice self-care strategies that help you thrive even in uncertain times. Learn mindfulness techniques and create sustainable wellbeing habits.",
+    image: "/images/service-1.png",
+    lessons: "12 Lessons",
+    duration: "4 Weeks",
+    price: "$79",
+    tags: ["educators", "leaders", "anyone seeking balance"]
+  },
+  {
+    id: "teaching-uncertainty",
+    title: "Teaching in Times of Uncertainty",
+    description: "Equip yourself with practical strategies to maintain teaching effectiveness during challenging times. Learn adaptive methods and emotional support techniques for both yourself and your students.",
+    image: "/images/service-3.png",
+    lessons: "12 Lessons",
+    duration: "4 Weeks",
+    price: "$69",
+    tags: ["teachers", "educators", "school administrators"]
+  },
+  {
+    id: "digital-tools",
+    title: "Digital Tools for EFL Teaching",
+    description: "Master the latest digital tools and technologies for effective English language teaching. From interactive platforms to assessment tools, enhance your digital teaching capabilities.",
+    image: "/images/service-4.png",
+    lessons: "12 Lessons",
+    duration: "4 Weeks",
+    price: "$59",
+    tags: ["EFL teachers", "language educators", "online instructors"]
+  },
+  {
+    id: "reflective-practice-1",
+    title: "Reflective Practice: Growth Through Reflection",
+    description: "Learn how to use reflection for personal and professional growth, analyze experiences, and improve decision-making skills. Learn how to use reflection for personal and professional growth, analyze experiences.",
+    image: "/images/service-2.png",
+    lessons: "12 Lessons",
+    duration: "4 Weeks",
+    price: "$59",
+    tags: ["students", "professionals", "anyone seeking self-improvement"]
+  },
+  {
+    id: "reflective-practice-2",
+    title: "Reflective Practice: Growth Through Reflection",
+    description: "Deepen your understanding of reflective practice with advanced techniques. Explore journaling methods, peer reflection, and structured frameworks for continuous improvement.",
+    image: "/images/course-5.png",
+    lessons: "12 Lessons",
+    duration: "4 Weeks",
+    price: "$59",
+    tags: ["students", "professionals", "anyone seeking self-improvement"]
+  },
+  {
+    id: "reflective-practice-3",
+    title: "Reflective Practice: Growth Through Reflection",
+    description: "Apply reflective practice in group settings and organizations. Learn facilitation techniques and how to create a culture of continuous learning and improvement.",
+    image: "/images/course-6.png",
+    lessons: "12 Lessons",
+    duration: "4 Weeks",
+    price: "$59",
+    tags: ["students", "professionals", "anyone seeking self-improvement"]
+  },
+];
+
+const breadcrumb = [
+  { label: 'Home', href: '/' },
+  { label: 'Courses', href: '/courses' }
+];
+---
+
+<Layout title="Courses | Antonina Devitska" description="Explore transformative learning programs that combine wellbeing, innovation, and pedagogy.">
+  <Header currentPage="services" />
+  
+  <main>
+    <PageHero 
+      title="My Programs & Services" 
+      breadcrumb={breadcrumb}
+    />
+    
+    <section class="courses-section">
+      <div class="container">
+        <h2 class="section-title">Explore My Service Areas</h2>
+        
+        <div class="filter-wrapper">
+          <CategoryFilter categories={categories} />
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="courses-grid">
+          {courses.map(course => (
+            <CourseCard {...course} />
+          ))}
+        </div>
+        
+        <Pagination currentPage={1} totalPages={10} />
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+  <CourseModal />
+</Layout>
+
+<style>
+  .courses-section {
+    padding: 60px 0 100px;
+  }
+  
+  .section-title {
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 2.33;
+    color: var(--color-primary);
+    margin-bottom: 24px;
+  }
+  
+  .filter-wrapper {
+    margin-bottom: 40px;
+  }
+  
+  .divider {
+    height: 1px;
+    background: var(--color-gray);
+    margin-bottom: 60px;
+  }
+  
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+  
+  @media (max-width: 1100px) {
+    .courses-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .courses-section {
+      padding: 40px 0 80px;
+    }
+    
+    .section-title {
+      font-size: 26px;
+    }
+    
+    .courses-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+</style>

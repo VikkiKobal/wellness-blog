@@ -1,0 +1,262 @@
+---
+
+---
+
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-circle-outline"></div>
+    <div class="hero-circle-gradient"></div>
+    <div class="hero-image-wrapper">
+      <img src="/images/hero-portrait.png" alt="Antonina Devitska" class="hero-image" />
+    </div>
+  </div>
+  
+  <div class="container hero-container">
+    <div class="hero-content">
+      <div class="hero-heading">
+        <h1>
+          <span class="line-1">Human-Centered <span class="teaching-word">Teaching<svg class="heading-underline" width="140" height="10" viewBox="0 0 140 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 8C30 2 110 -2 138 8" stroke="#BAD8B6" stroke-width="4" stroke-linecap="round"/>
+            </svg></span></span>
+          <span class="line-2">for a Changing World</span>
+        </h1>
+      </div>
+      
+      <p class="hero-description">
+        I'm an educator, mentor, and course designer who helps teachers and institutions integrate well-being, resilience, and innovation into learning.
+      </p>
+      
+      <a href="/courses" class="btn btn-primary hero-btn">
+        Explore my work
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    padding: 140px 0 80px;
+    overflow: hidden;
+  }
+  
+  .hero-bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60%;
+    height: 100%;
+    pointer-events: none;
+  }
+  
+  .hero-circle-outline {
+    position: absolute;
+    top: 110px;
+    right: 80px;
+    width: 560px;
+    height: 560px;
+    border: 3px solid var(--color-primary);
+    border-radius: 50%;
+    opacity: 0.5;
+  }
+  
+  .hero-circle-gradient {
+    position: absolute;
+    top: 135px;
+    right: 105px;
+    width: 510px;
+    height: 510px;
+    border-radius: 50%;
+    background: var(--gradient-hero);
+    opacity: 0.8;
+  }
+  
+  .hero-image-wrapper {
+    position: absolute;
+    top: 135px;
+    right: 105px;
+    width: 510px;
+    height: 510px;
+    z-index: 2;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  
+  .hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  
+  .hero-container {
+    position: relative;
+    z-index: 3;
+  }
+  
+  .hero-content {
+    max-width: 658px;
+    padding-top: 60px;
+  }
+  
+  .hero-heading {
+    margin-bottom: 40px;
+  }
+  
+  .hero-heading h1 {
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 50px;
+    line-height: 1.25;
+    color: var(--color-text-dark);
+  }
+  
+  .hero-heading .line-1 {
+    display: block;
+  }
+  
+  .hero-heading .line-2 {
+    display: block;
+  }
+  
+  .teaching-word {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .heading-underline {
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    width: 140px;
+    height: 10px;
+  }
+  
+  .hero-description {
+    font-family: var(--font-primary);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.39;
+    color: var(--color-text-black);
+    margin-bottom: 50px;
+    max-width: 600px;
+  }
+  
+  .hero-btn {
+    background: var(--color-primary);
+    color: var(--color-white);
+    padding: 12px 22px;
+    font-size: 20px;
+  }
+  
+  @media (max-width: 1200px) {
+    .hero-bg {
+      width: 50%;
+    }
+    
+    .hero-circle-outline {
+      width: 420px;
+      height: 420px;
+      right: 20px;
+    }
+    
+    .hero-circle-gradient {
+      width: 380px;
+      height: 380px;
+      right: 40px;
+    }
+    
+    .hero-image-wrapper {
+      width: 380px;
+      height: 380px;
+      top: 195px;
+      right: 40px;
+    }
+    
+    .hero-heading h1 {
+      font-size: 44px;
+    }
+    
+    .hero-description {
+      font-size: 20px;
+    }
+  }
+  
+  @media (max-width: 968px) {
+    .hero {
+      min-height: auto;
+      padding: 120px 0 60px;
+    }
+    
+    .hero-bg {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      order: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    
+    .hero-circle-outline {
+      width: 340px;
+      height: 340px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      right: auto;
+    }
+    
+    .hero-circle-gradient,
+    .hero-image-wrapper {
+      width: 300px;
+      height: 300px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      right: auto;
+    }
+    
+    .hero-container {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .hero-content {
+      max-width: 100%;
+      padding-top: 0;
+      text-align: center;
+    }
+    
+    .hero-heading h1 {
+      font-size: 36px;
+    }
+    
+    .heading-underline {
+      display: none;
+    }
+    
+    .hero-description {
+      font-size: 18px;
+      margin: 0 auto 40px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .hero-heading h1 {
+      font-size: 28px;
+    }
+    
+    .hero-description {
+      font-size: 16px;
+    }
+    
+    .hero-btn {
+      font-size: 18px;
+      padding: 12px 20px;
+    }
+  }
+</style>
+
