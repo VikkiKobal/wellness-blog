@@ -138,8 +138,9 @@ const currentYear = new Date().getFullYear();
   }
 
   .contact-item span {
-    overflow-wrap: anywhere;
-    word-break: break-word;
+    /* default: allow normal wrapping, mobile overrides below */
+    overflow-wrap: normal;
+    word-break: normal;
   }
   
   .contact-item svg {
@@ -290,6 +291,7 @@ const currentYear = new Date().getFullYear();
     .footer-content {
       grid-template-columns: 1fr 1fr;
       gap: 18px;
+      align-items: start;
     }
 
     .contact-title {
@@ -304,11 +306,27 @@ const currentYear = new Date().getFullYear();
       align-items: flex-start;
       font-size: 14px;
       line-height: 1.6;
+      gap: 10px;
+    }
+
+    /* Keep important contact lines on one row (no wrapping) */
+    .contact-item span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .footer-right {
+      align-items: flex-end;
+      text-align: right;
     }
     
     .footer-nav-list {
       flex-direction: column;
       gap: 12px;
+      justify-content: flex-start;
+      align-items: flex-end;
     }
 
     .footer-divider {
@@ -316,10 +334,14 @@ const currentYear = new Date().getFullYear();
     }
 
     .footer-bottom-right {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: flex-start;
       gap: 14px;
+    }
+
+    .social-icons {
+      justify-content: flex-end;
     }
     
     .logo-shape {
