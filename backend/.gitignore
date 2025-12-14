@@ -1,4 +1,3 @@
-# Firebase service account key (NEVER commit this!)
 firebase-service-account.json
 *.json
 !go.mod

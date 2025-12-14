@@ -93,9 +93,11 @@ const testimonials = [
   }
 
   .section-heading h2 {
-    font-family: var(--font-accent);
-    font-size: 42px;
-    margin: 0;
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 46px;
+    line-height: 1.14;
+    color: var(--color-text-black);
   }
 
   .section-heading .eyebrow {
@@ -196,6 +198,11 @@ const testimonials = [
     }
   }
 
+  @media (max-width: 968px) {
+    .section-heading h2 {
+      font-size: 36px;
+    }
+
   @media (max-width: 768px) {
     .testimonials-slider {
       padding: 60px 0;
@@ -209,6 +216,12 @@ const testimonials = [
       flex: 0 0 90vw;
       padding: 24px;
     }
+
+    .section-heading h2 {
+      font-size: 28px;
+      text-align: center;
+    }
   }
+}
 </style>
 
