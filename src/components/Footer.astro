@@ -136,6 +136,11 @@ const currentYear = new Date().getFullYear();
     line-height: 1.85;
     color: var(--color-white);
   }
+
+  .contact-item span {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
   
   .contact-item svg {
     flex-shrink: 0;
@@ -257,12 +262,17 @@ const currentYear = new Date().getFullYear();
   
   @media (max-width: 968px) {
     .footer-content {
-      flex-direction: column;
+      grid-template-columns: 1fr;
       gap: 40px;
     }
     
     .footer-right {
       align-items: flex-start;
+    }
+
+    .footer-nav-list {
+      justify-content: flex-start;
+      gap: 20px;
     }
     
     .footer-bottom-right {
@@ -275,6 +285,20 @@ const currentYear = new Date().getFullYear();
   @media (max-width: 600px) {
     .footer {
       padding: 40px 0 30px;
+    }
+
+    .contact-title {
+      margin-bottom: 18px;
+    }
+    
+    .contact-list {
+      margin-bottom: 28px;
+    }
+    
+    .contact-item {
+      align-items: flex-start;
+      font-size: 14px;
+      line-height: 1.6;
     }
     
     .footer-nav-list {
