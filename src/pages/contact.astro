@@ -1,0 +1,348 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Contact | Antonina Devitska" description="Get in touch with Antonina Devitska.">
+  <Header currentPage="contact" />
+
+  <main class="contact-page">
+    <section class="contact-hero">
+      <div class="container">
+        <p class="subtitle">
+          Want to collaborate, invite me to speak, or ask a question? Send a message and I’ll get back to you.
+        </p>
+      </div>
+    </section>
+
+    <section class="contact-content">
+      <div class="container">
+        <div class="grid">
+
+
+          <div class="form">
+            <form id="contact-form" class="form-card" novalidate>
+              <h2 class="card-title">Send a message</h2>
+
+              <div class="row">
+                <label class="field">
+                  <span class="label">Name</span>
+                  <input name="name" type="text" autocomplete="name" required minlength="2" placeholder="Your name" />
+                </label>
+
+                <label class="field">
+                  <span class="label">Email</span>
+                  <input name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
+                </label>
+              </div>
+
+              <label class="field">
+                <span class="label">Subject <span class="muted">(optional)</span></span>
+                <input name="subject" type="text" maxlength="140" placeholder="What’s this about?" />
+              </label>
+
+              <label class="field">
+                <span class="label">Message</span>
+                <textarea name="message" rows="7" required minlength="10" maxlength="5000" placeholder="Write your message..."></textarea>
+              </label>
+
+              <!-- Honeypot field (hidden): bots will fill this -->
+              <label class="honeypot" aria-hidden="true">
+                Website
+                <input name="website" type="text" tabindex="-1" autocomplete="off" />
+              </label>
+
+              <input name="createdAt" type="hidden" value="" />
+
+              <div class="actions">
+                <button id="contact-submit" class="btn-primary" type="submit">
+                  <span class="btn-text">Send message</span>
+                  <span class="btn-spinner" aria-hidden="true"></span>
+                </button>
+                <p id="contact-status" class="status" aria-live="polite"></p>
+              </div>
+
+              <p class="fineprint">
+                By sending this form you agree to be contacted back at the email you provide.
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .contact-page {
+    padding-top: 120px; 
+  }
+
+  .contact-hero {
+    padding: 56px 0 24px;
+  }
+  .subtitle {
+    margin-top: 12px;
+    max-width: 60ch;
+    font-size: 18px;
+    color: var(--color-text-dark);
+  }
+
+  .contact-content {
+    padding: 24px 0 80px;
+  }
+
+  .card-title {
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .card-text {
+    font-size: 18px;
+    color: var(--color-text-dark);
+    margin-top: 10px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .form-card {
+    background: var(--color-green-bg);
+    border: 1px solid var(--color-primary);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+    align-items: center;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .field {
+    display: grid;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-dark);
+  }
+
+  .muted {
+    font-weight: 500;
+    color: var(--color-gray);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    border: 1px solid rgba(1, 22, 44, 0.12);
+    background: var(--color-white);
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-size: 16px;
+    color: var(--color-text-dark);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 150px;
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: rgba(141, 119, 171, 0.8);
+    box-shadow: 0 0 0 4px rgba(141, 119, 171, 0.18);
+  }
+
+  .honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: 16px;
+    background: var(--color-primary);
+    color: var(--color-white);
+    font-weight: 700;
+    font-size: 16px;
+    transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.75;
+    transform: none;
+    cursor: not-allowed;
+  }
+
+  .btn-spinner {
+    display: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: rgba(255, 255, 255, 1);
+    animation: spin 0.8s linear infinite;
+  }
+
+  .btn-primary.is-loading .btn-spinner {
+    display: inline-block;
+  }
+
+  .status {
+    font-size: 14px;
+    color: var(--color-text-dark);
+  }
+
+  .status.error {
+    color: #b00020;
+  }
+
+  .status.success {
+    color: #0b6b2e;
+  }
+
+  .fineprint {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--color-gray);
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .contact-page {
+      padding-top: 96px;
+    }
+
+    .title {
+      font-size: 34px;
+    }
+
+    .subtitle,
+    .card-text {
+      font-size: 16px;
+    }
+
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script type="module">
+  const API_BASE_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8080/api';
+
+  const form = document.getElementById('contact-form');
+  const submitBtn = document.getElementById('contact-submit');
+  const statusEl = document.getElementById('contact-status');
+
+  function setStatus(text, kind) {
+    if (!statusEl) return;
+    statusEl.textContent = text || '';
+    statusEl.classList.toggle('error', kind === 'error');
+    statusEl.classList.toggle('success', kind === 'success');
+  }
+
+  function setLoading(loading) {
+    if (!submitBtn) return;
+    submitBtn.toggleAttribute('disabled', loading);
+    submitBtn.classList.toggle('is-loading', loading);
+  }
+
+  // timestamp used for a basic bot/timing check
+  const createdAtInput = form?.querySelector('input[name="createdAt"]');
+  if (createdAtInput) createdAtInput.value = String(Date.now());
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    setStatus('', '');
+
+    const fd = new FormData(form);
+    const payload = {
+      name: String(fd.get('name') || '').trim(),
+      email: String(fd.get('email') || '').trim(),
+      subject: String(fd.get('subject') || '').trim(),
+      message: String(fd.get('message') || '').trim(),
+      website: String(fd.get('website') || '').trim(),
+      createdAt: Number(fd.get('createdAt') || 0),
+    };
+
+    // Basic client-side validation (server also validates)
+    if (payload.name.length < 2) return setStatus('Please enter your name.', 'error');
+    if (!payload.email.includes('@')) return setStatus('Please enter a valid email.', 'error');
+    if (payload.message.length < 10) return setStatus('Please enter a message (at least 10 characters).', 'error');
+
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data?.success) {
+        setStatus(data?.message || 'Failed to send. Please try again.', 'error');
+        return;
+      }
+
+      setStatus(data.message || 'Message sent! Thank you.', 'success');
+      form.reset();
+      if (createdAtInput) createdAtInput.value = String(Date.now());
+    } catch (err) {
+      setStatus('Network error. Please try again.', 'error');
+    } finally {
+      setLoading(false);
+    }
+  });
+</script>
+
+

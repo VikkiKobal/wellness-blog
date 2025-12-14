@@ -46,11 +46,46 @@ const navItems = [
       <span>Contact Me</span>
     </a>
     
-    <button class="mobile-menu-btn" aria-label="Toggle menu">
+    <button
+      class="mobile-menu-btn"
+      type="button"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
       <span></span>
       <span></span>
       <span></span>
     </button>
+
+    <!-- Mobile/Tablet Menu Drawer -->
+    <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+      <div class="mobile-menu-backdrop" data-mobile-menu-close></div>
+
+      <div class="mobile-menu-panel" role="dialog" aria-modal="true" aria-label="Site navigation">
+        <button class="mobile-menu-close" type="button" aria-label="Close menu" data-mobile-menu-close>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="mobile-nav" aria-label="Mobile navigation">
+          <ul class="mobile-nav-list">
+            {navItems.map(item => (
+              <li class="mobile-nav-item">
+                <a
+                  href={item.href}
+                  class:list={['mobile-nav-link', { active: currentPage === item.id }]}
+                >
+                  {item.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <a href="/contact" class="mobile-contact-btn">Contact Me</a>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -184,40 +219,204 @@ const navItems = [
     height: 2px;
     background: var(--color-text-dark);
     transition: all 0.3s ease;
+    transform-origin: center;
+  }
+
+  /* Mobile/Tablet drawer menu */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .mobile-menu.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-menu-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  .mobile-menu-panel {
+    position: relative;
+    margin-left: auto;
+    height: 100%;
+    width: min(86vw, 360px);
+    background: var(--color-background);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.12);
+    padding: 96px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+  }
+
+  .mobile-menu.open .mobile-menu-panel {
+    transform: translateX(0);
+  }
+
+  .mobile-menu-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    color: var(--color-text-dark);
+  }
+
+  .mobile-menu-close span {
+    position: absolute;
+    width: 22px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 999px;
+  }
+
+  .mobile-menu-close span:nth-child(1) {
+    transform: rotate(45deg);
+  }
+
+  .mobile-menu-close span:nth-child(2) {
+    transform: rotate(-45deg);
+  }
+
+  .mobile-nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .mobile-nav-link {
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--color-text-dark);
+  }
+
+  .mobile-nav-link.active {
+    color: var(--color-primary);
+  }
+
+  .mobile-contact-btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 18px;
+    border-radius: 16px;
+    background: var(--color-primary);
+    color: var(--color-white);
+    font-weight: 600;
+  }
+
+  :global(body.no-scroll) {
+    overflow: hidden;
+  }
+
+  /* Burger -> X animation (via aria-expanded) */
+  .mobile-menu-btn[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .mobile-menu-btn[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .mobile-menu-btn[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .header,
+    .nav-link,
+    .contact-btn,
+    .mobile-menu,
+    .mobile-menu-panel,
+    .mobile-menu-btn span {
+      transition: none !important;
+    }
   }
   
   @media (max-width: 1024px) {
-    .nav-list {
-      gap: 24px;
+    .nav {
+      display: none;
     }
-    
-    .nav-link {
-      font-size: 16px;
-    }
-    
+
     .contact-btn {
-      font-size: 16px;
-      padding: 10px 20px;
+      display: none;
+    }
+
+    .mobile-menu-btn {
+      display: flex;
     }
   }
   
   @media (max-width: 768px) {
-    .nav {
-      display: none;
+    .header-container {
+      gap: 16px;
     }
-    
-    .contact-btn {
+  }
+
+  @media (min-width: 1025px) {
+    .mobile-menu {
       display: none;
-    }
-    
-    .mobile-menu-btn {
-      display: flex;
     }
   }
 </style>
 
 <script>
   const header = document.querySelector('.header');
+  const menuBtn = document.querySelector('.mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  function setMenuOpen(open) {
+    if (!menuBtn || !mobileMenu) return;
+
+    mobileMenu.classList.toggle('open', open);
+    mobileMenu.setAttribute('aria-hidden', open ? 'false' : 'true');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    document.body.classList.toggle('no-scroll', open);
+
+    if (open) {
+      mobileMenu.querySelector('a')?.focus();
+    } else {
+      menuBtn.focus();
+    }
+  }
+
+  menuBtn?.addEventListener('click', () => {
+    const isOpen = menuBtn.getAttribute('aria-expanded') === 'true';
+    setMenuOpen(!isOpen);
+  });
+
+  mobileMenu?.addEventListener('click', (e) => {
+    const target = e.target;
+    if (!(target instanceof Element)) return;
+    if (target.closest('[data-mobile-menu-close]')) setMenuOpen(false);
+  });
+
+  mobileMenu?.querySelectorAll('a')?.forEach((a) => {
+    a.addEventListener('click', () => setMenuOpen(false));
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setMenuOpen(false);
+  });
+
+  window.matchMedia('(min-width: 1025px)')?.addEventListener('change', (e) => {
+    if (e.matches) setMenuOpen(false);
+  });
   
   window.addEventListener('scroll', () => {
     if (window.scrollY > 50) {

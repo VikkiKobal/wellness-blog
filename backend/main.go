@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"firebase.google.com/go/v4"
@@ -95,10 +96,25 @@ func main() {
 	api.HandleFunc("/auth/verify", server.verifyToken).Methods("POST")
 	api.HandleFunc("/auth/user", server.getUser).Methods("GET")
 	api.HandleFunc("/auth/refresh", server.refreshToken).Methods("POST")
+	api.HandleFunc("/contact", server.contact).Methods("POST")
 
 	// CORS middleware
+	allowedOrigins := []string{"http://localhost:4321", "http://localhost:3000"}
+	if v := strings.TrimSpace(os.Getenv("CORS_ORIGINS")); v != "" {
+		parts := strings.Split(v, ",")
+		origins := make([]string, 0, len(parts))
+		for _, p := range parts {
+			if s := strings.TrimSpace(p); s != "" {
+				origins = append(origins, s)
+			}
+		}
+		if len(origins) > 0 {
+			allowedOrigins = origins
+		}
+	}
+
 	corsHandler := handlers.CORS(
-		handlers.AllowedOrigins([]string{"http://localhost:4321", "http://localhost:3000"}),
+		handlers.AllowedOrigins(allowedOrigins),
 		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
 		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
 		handlers.AllowCredentials(),
