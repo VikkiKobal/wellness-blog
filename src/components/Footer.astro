@@ -196,7 +196,6 @@ const currentYear = new Date().getFullYear();
     flex-direction: column;
     align-items: flex-end;
     justify-content: space-between;
-    flex: 1;
     gap: 20px;
   }
   
@@ -262,12 +261,13 @@ const currentYear = new Date().getFullYear();
   
   @media (max-width: 968px) {
     .footer-content {
-      grid-template-columns: 1fr;
-      gap: 40px;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
     }
     
     .footer-right {
       align-items: flex-start;
+      justify-content: flex-start;
     }
 
     .footer-nav-list {
@@ -284,7 +284,12 @@ const currentYear = new Date().getFullYear();
   
   @media (max-width: 600px) {
     .footer {
-      padding: 40px 0 30px;
+      padding: 32px 0 26px;
+    }
+
+    .footer-content {
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
     }
 
     .contact-title {
@@ -304,6 +309,17 @@ const currentYear = new Date().getFullYear();
     .footer-nav-list {
       flex-direction: column;
       gap: 12px;
+    }
+
+    .footer-divider {
+      margin: 14px 0;
+    }
+
+    .footer-bottom-right {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
     }
     
     .logo-shape {

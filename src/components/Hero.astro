@@ -27,12 +27,14 @@
         My work bridges research, global experience, and mindful, trauma-informed practice
               </p>
       
-      <a href="/courses" class="btn btn-primary hero-btn">
-        Explore my work
-      </a>
-      <a href="/courses" class="btn btn-primary hero-btn">
-        Invite me to speak
-      </a>
+      <div class="hero-actions">
+        <a href="/courses" class="btn btn-primary hero-btn">
+          Explore my work
+        </a>
+        <a href="/courses" class="btn btn-primary hero-btn">
+          Invite me to speak
+        </a>
+      </div>
       
     </div>
   </div>
@@ -147,12 +149,18 @@
     margin-bottom: 50px;
     max-width: 650px;
   }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+  }
   
   .hero-btn {
     background: var(--color-primary);
     color: var(--color-white);
     padding: 12px 22px;
-    margin-right: 10px;
     font-size: 20px;
   }
   
@@ -252,11 +260,19 @@
     .hero-btn {
       font-size: 18px;
       padding: 12px 20px;
-      margin-right: 5px;
     }
   }
   
   @media (max-width: 480px) {
+    .hero {
+      padding: 104px 0 48px;
+    }
+
+    .hero-bg {
+      height: 320px;
+      margin-bottom: 28px;
+    }
+
     .hero-heading h1 {
       font-size: 28px;
     }
@@ -266,9 +282,9 @@
     }
     
     .hero-btn {
-      font-size: 18px;
-      padding: 12px 20px;
-      margin-right: 5px;
+      width: 100%;
+      font-size: 16px;
+      padding: 12px 16px;
     }
   }
 </style>

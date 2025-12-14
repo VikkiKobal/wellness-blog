@@ -74,23 +74,18 @@ const { categories } = Astro.props;
   
   @media (max-width: 600px) {
     .category-filter {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: 6px;
       gap: 10px;
-      scrollbar-width: none; /* Firefox */
-    }
-
-    .category-filter::-webkit-scrollbar {
-      display: none; /* Chrome/Safari */
     }
 
     .filter-btn {
       padding: 10px 16px;
       font-size: 14px;
-      flex: 0 0 auto;
       min-width: auto;
+      max-width: 100%;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      hyphens: auto;
     }
   }
 </style>
