@@ -39,7 +39,7 @@ const services = [
   <div class="container">
     <div class="services-header">
       <h2 class="services-title">Explore My Services</h2>
-      <a href="/services" class="btn btn-primary btn-small view-all-btn">
+      <a href="/courses" class="btn btn-primary btn-small view-all-btn view-all-desktop">
         View All
       </a>
     </div>
@@ -63,6 +63,10 @@ const services = [
     <div class="services-single">
       <ServiceCard {...services[4]} />
     </div>
+    
+    <a href="/courses" class="btn btn-primary btn-small view-all-btn view-all-mobile">
+      View All
+    </a>
   </div>
 </section>
 
@@ -93,6 +97,14 @@ const services = [
     border-radius: 8px;
     font-size: 14px;
     padding: 14px 22px;
+  }
+  
+  .view-all-mobile {
+    display: none;
+  }
+  
+  .view-all-desktop {
+    display: block;
   }
   
   .services-grid {
@@ -136,6 +148,16 @@ const services = [
       margin-bottom: 40px;
     }
     
+    .view-all-desktop {
+      display: none;
+    }
+    
+    .view-all-mobile {
+      display: block;
+      margin: 24px auto 0;
+      text-align: center;
+    }
+    
     .services-title {
       font-size: 28px;
     }
@@ -148,7 +170,7 @@ const services = [
     
     .services-single {
       max-width: 100%;
+      margin-bottom: 24px;
     }
   }
 </style>
-

@@ -23,3 +23,13 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Go backend
+backend/firebase-service-account.json
+backend/.env
+backend/server
+backend/*.exe
+backend/*.dll
+backend/*.so
+backend/*.dylib
+backend/vendor/

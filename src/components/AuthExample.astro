@@ -1,0 +1,130 @@
+---
+// Example component showing how to integrate Firebase auth with the Go backend
+---
+
+<div class="auth-example">
+  <button id="sign-in-btn" class="auth-button">Sign In with Google</button>
+  <button id="sign-out-btn" class="auth-button" style="display: none;">Sign Out</button>
+  <div id="user-info" class="user-info"></div>
+</div>
+
+<script>
+  import { auth, signInWithGoogle } from '../firebase/firebase';
+  import { onAuthStateChanged, signOut } from 'firebase/auth';
+  import { verifyToken, getUser } from '../utils/api';
+  
+  // TypeScript type for user
+  interface FirebaseUser {
+    email: string | null;
+    displayName: string | null;
+    getIdToken(): Promise<string>;
+  }
+
+  const signInBtn = document.getElementById('sign-in-btn');
+  const signOutBtn = document.getElementById('sign-out-btn');
+  const userInfo = document.getElementById('user-info');
+
+  // Handle sign in
+  signInBtn?.addEventListener('click', async () => {
+    try {
+      const result = await signInWithGoogle();
+      const user = result.user;
+      const idToken = await user.getIdToken();
+
+      // Verify token with backend
+      const verification = await verifyToken(idToken);
+      if (verification.valid && verification.user) {
+        console.log('User verified with backend:', verification.user);
+        updateUI(user);
+      } else {
+        console.error('Token verification failed:', verification.error);
+        alert('Authentication failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Sign in error:', error);
+      alert('Sign in failed. Please try again.');
+    }
+  });
+
+  // Handle sign out
+  signOutBtn?.addEventListener('click', async () => {
+    try {
+      await signOut(auth);
+      updateUI(null);
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
+  });
+
+  // Listen for auth state changes
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      try {
+        const idToken = await user.getIdToken();
+        // Optionally verify with backend on state change
+        const backendUser = await getUser(idToken);
+        if (backendUser) {
+          console.log('Backend user data:', backendUser);
+        }
+      } catch (error) {
+        console.error('Error getting user from backend:', error);
+      }
+    }
+    updateUI(user);
+  });
+
+  function updateUI(user: FirebaseUser | null) {
+    if (user) {
+      signInBtn!.style.display = 'none';
+      signOutBtn!.style.display = 'block';
+      userInfo!.innerHTML = `
+        <div class="user-details">
+          <p><strong>Signed in as:</strong> ${user.email}</p>
+          <p><strong>Name:</strong> ${user.displayName || 'N/A'}</p>
+        </div>
+      `;
+    } else {
+      signInBtn!.style.display = 'block';
+      signOutBtn!.style.display = 'none';
+      userInfo!.innerHTML = '';
+    }
+  }
+</script>
+
+<style>
+  .auth-example {
+    padding: 2rem;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .auth-button {
+    background-color: var(--color-green-card, #4caf50);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 1rem;
+    transition: background-color 0.2s;
+  }
+
+  .auth-button:hover {
+    background-color: var(--color-green-card, #45a049);
+  }
+
+  .user-info {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+  }
+
+  .user-details p {
+    margin: 0.5rem 0;
+  }
+</style>
+

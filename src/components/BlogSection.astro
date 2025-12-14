@@ -59,7 +59,7 @@ const { posts = defaultPosts } = Astro.props;
         Exploring Education & Wellbeing:<br />
         Latest Articles
       </h2>
-      <a href="/blog" class="btn btn-primary btn-small view-all-btn">
+      <a href="/blog" class="btn btn-primary btn-small view-all-btn view-all-desktop">
         View All
       </a>
     </div>
@@ -69,6 +69,10 @@ const { posts = defaultPosts } = Astro.props;
         <BlogCard {...post} />
       ))}
     </div>
+
+    <a href="/courses" class="btn btn-primary btn-small view-all-btn view-all-mobile">
+      View All
+    </a>
   </div>
 </section>
 
@@ -98,11 +102,17 @@ const { posts = defaultPosts } = Astro.props;
     background: var(--color-primary);
     color: var(--color-white);
     border-radius: 8px;
-    font-size: 16px;
-    padding: 16px 25px;
-    flex-shrink: 0;
+    font-size: 14px;
+    padding: 14px 22px;
   }
   
+  .view-all-mobile {
+    display: none;
+  }
+  
+  .view-all-desktop {
+    display: block;
+  }
   .blog-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -131,6 +141,18 @@ const { posts = defaultPosts } = Astro.props;
       gap: 24px;
     }
   }
+
+  @media (max-width: 768px) {
+    .view-all-desktop {
+      display: none;
+    }
+    
+    .view-all-mobile {
+      display: block;
+      margin: 24px auto 0;
+      text-align: center;
+    }
+  }
   
   @media (max-width: 480px) {
     .blog-section {
@@ -146,5 +168,52 @@ const { posts = defaultPosts } = Astro.props;
       text-align: center;
     }
   }
+
+  @media (max-width: 768px) {
+    .services-section {
+      padding: 60px 0;
+    }
+    
+    .services-header {
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    
+    .view-all-desktop {
+      display: none;
+    }
+    
+    .view-all-mobile {
+      display: block;
+      margin: 24px auto 0;
+      text-align: center;
+    }
+    
+    .services-title {
+      font-size: 28px;
+    }
+    
+    .services-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    
+    .services-single {
+      max-width: 100%;
+      margin-bottom: 24px;
+    } 
+  }
 </style>
+
+
+
+
+
+
+
+
+
+
 

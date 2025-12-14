@@ -96,8 +96,11 @@ const breadcrumb = [
     
     <section class="courses-section">
       <div class="container">
-        <h2 class="section-title">Explore My Service Areas</h2>
-        
+        <div class="services-header">
+          <h2 class="section-title">Explore My Service Areas</h2>
+          <p class="section-description">
+            These offerings can be customized for universities, teacher training centers, NGOs, or international partners.          </p>
+        </div>        
         <div class="filter-wrapper">
           <CategoryFilter categories={categories} />
         </div>
@@ -131,6 +134,16 @@ const breadcrumb = [
     line-height: 2.33;
     color: var(--color-primary);
     margin-bottom: 24px;
+  }
+
+  .section-description {
+    font-family: var(--font-secondary);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.85;
+    color: #454545;
+    max-width: 1131px;
+    margin-bottom: 40px;
   }
   
   .filter-wrapper {

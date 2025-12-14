@@ -29,25 +29,30 @@ const { categories } = Astro.props;
     flex-wrap: wrap;
     gap: 16px;
     justify-content: flex-start;
+    max-width: 100%;
   }
   
   .filter-btn {
-    padding: 16px 32px;
-    border: 1px solid var(--color-primary);
-    border-radius: 16px;
-    background: var(--color-background);
-    color: #423259;
+    padding: 14px 40px;
+    border: 2px solid var(--color-primary);
+    border-radius: 40px;
+    background: transparent;
+    color: var(--color-primary);
     font-family: var(--font-primary);
-    font-weight: 600;
-    font-size: 18px;
+    font-weight: 500;
+    font-size: 16px;
     line-height: 1.5;
     cursor: pointer;
     transition: all 0.3s ease;
     text-align: center;
+    white-space: nowrap;
+    min-width: 200px;
+    flex: 0 1 auto;
   }
   
   .filter-btn:hover {
-    background: rgba(141, 119, 171, 0.1);
+    background: var(--color-primary);
+    color: var(--color-white);
   }
   
   .filter-btn.active {
@@ -63,6 +68,7 @@ const { categories } = Astro.props;
     .filter-btn {
       padding: 12px 24px;
       font-size: 16px;
+      min-width: 150px;
     }
   }
   
@@ -75,4 +81,11 @@ const { categories } = Astro.props;
     }
   }
 </style>
+
+
+
+
+
+
+
 

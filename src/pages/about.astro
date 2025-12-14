@@ -30,6 +30,41 @@ const socialLinks = [
     icon: `<div class="rg-badge"><span class="rg-r">R</span><span class="rg-g">G</span></div>`
   }
 ];
+
+const approachItems = [
+  {
+    title: 'Emotional Intelligence & SEL',
+    image: '/images/approach/approach-1.png',
+    description:
+      'Developing emotional literacy and empathy so relationships and communication become fertile ground for learning.',
+  },
+  {
+    title: 'Trauma-Informed & Resilience-Oriented Practices',
+    image: '/images/approach/approach-2.png',
+    description:
+      'Grounded in trauma-aware principles that reduce stress and help educators grow through change with confidence.',
+  },
+  {
+    title: 'Purposeful, Innovative Digital Pedagogy',
+    image: '/images/approach/approach-3.png',
+    description:
+      'Designing accessible, engaging digital experiences that amplify human needs without overwhelming learners or educators.',
+  },
+  {
+    title: 'Reflective & Future-Ready Learning Design',
+    image: '/images/approach/approach-4.png',
+    description:
+      'Infusing mindful evidence-based strategies so educators build self-awareness and future-ready competencies.',
+  },
+];
+
+const valueItems = [
+  { title: 'Humanity', description: 'People first always—learning rooted in empathy and care.' },
+  { title: 'Clarity', description: 'Simple, intentional communication that keeps focus on what matters.' },
+  { title: 'Connection', description: 'Learning grows through relationships, trust, and shared reflection.' },
+  { title: 'Resilience', description: 'Practices that keep educators and learners steady in change.' },
+  { title: 'Innovation', description: 'Future-ready design blending technology with emotional intelligence.' },
+];
 ---
 
 <Layout title="About Me | Antonina Devitska" description="Learn more about Antonina Devitska - educator, mentor, and course designer with 19 years of experience.">
@@ -76,6 +111,38 @@ const socialLinks = [
       </div>
     </section>
   </main>
+
+    <section class="approach-section">
+      <div class="container">
+
+      <div class="approach-intro">
+        <h2>My Approach & Values</h2>
+      </div>
+
+      <div class="featured-approach-grid">
+        {approachItems.map(item => (
+          <article class="featured-approach-card">
+            <div class="featured-approach-image">
+              <img src={item.image} alt={item.title} />
+            </div>
+            <div class="featured-approach-chip">
+            </div>
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+          </article>
+        ))}
+      </div>
+
+      <div class="values-grid">
+        {valueItems.map(value => (
+          <div class="value-pill">
+            <h4>{value.title}</h4>
+            <p>{value.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
   
   <Footer />
 </Layout>
@@ -119,6 +186,7 @@ const socialLinks = [
     height: auto;
     object-fit: cover;
     border-radius: 8px;
+    object-position: top;
   }
   
   .about-text {
@@ -129,7 +197,7 @@ const socialLinks = [
     font-family: var(--font-primary);
     font-weight: 400;
     font-size: 24px;
-    line-height: 2.17;
+    line-height: 1.8;
     color: var(--color-text-black);
     margin-bottom: 40px;
   }
@@ -192,6 +260,166 @@ const socialLinks = [
     position: absolute;
     right: 5px;
     top: 5px;
+  }
+
+  .approach-section {
+    padding: 0px 0 120px;
+    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(234,246,243,0.6) 100%);
+  }
+
+  .approach-intro {
+    max-width: 720px;
+    margin: 0 auto 32px;
+    text-align: center;
+  }
+
+  .approach-intro h2 {
+    font-size: 34px;
+    margin: 8px 0 0;
+    text-align: center;
+  }
+
+  .section-label {
+    font-size: 12px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .featured-approach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+
+  .featured-approach-card {
+    padding: 26px;
+    border-radius: 28px;
+    background: transparent;
+    border: 1px solid var(--color-primary);
+    box-shadow: 0 18px 45px rgba(17, 82, 62, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .featured-approach-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 2px;
+    align-self: center;
+  }
+
+  .featured-approach-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .featured-approach-card h3 {
+    margin: 0;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .featured-approach-card p {
+    margin: 0;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .featured-approach-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-text-muted);
+  }
+
+  .featured-approach-tag {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--color-primary);
+  }
+
+  .approach-header {
+    text-align: center;
+    margin-bottom: 40px;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .approach-header p {
+    font-size: 20px;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+  }
+
+  .approach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+  }
+
+  .approach-card {
+    padding: 28px;
+    border-radius: 24px;
+    background: transparent;
+    border: 1px solid var(--color-primary);
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .approach-icon {
+    font-size: 28px;
+  }
+
+  .approach-card h3 {
+    margin: 0;
+    font-size: 20px;
+  }
+
+  .approach-card p {
+    margin: 0;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  .values-grid {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+
+  .value-pill {
+    padding: 18px;
+    border-radius: 16px;
+    background: var(--color-green-card);
+    border: 1px dashed var(--color-primary);
+  }
+
+  .value-pill h4 {
+    margin: 0 0 6px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+
+  .value-pill p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--color-text-muted);
   }
   
   @media (max-width: 1100px) {

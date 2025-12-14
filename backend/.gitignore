@@ -1,0 +1,32 @@
+# Firebase service account key (NEVER commit this!)
+firebase-service-account.json
+*.json
+!go.mod
+!go.sum
+
+# Environment variables
+.env
+
+# Build artifacts
+server
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Go workspace file
+go.work
+
+# IDE
+.vscode/
+.idea/
+
+# Test coverage
+*.out
+coverage.html
+
+
+
+
+
+
