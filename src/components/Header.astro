@@ -16,7 +16,7 @@ const navItems = [
 
 <header class="header">
   <div class="container header-container">
-    <a href={currentPage === 'home' ? '#hero' : '/#hero'} class="logo" aria-label="Go to hero section">
+    <a href="/#top" class="logo" aria-label="Go to homepage" data-scroll-home-top>
       <img
         class="logo-img"
         src="/images/Logo.png"
@@ -374,6 +374,7 @@ const navItems = [
 
 <script>
   const header = document.querySelector<HTMLElement>('.header');
+  const homeLogoLink = document.querySelector<HTMLAnchorElement>('[data-scroll-home-top]');
   const menuBtn = document.querySelector<HTMLButtonElement>('.mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
 
@@ -397,6 +398,20 @@ const navItems = [
   menuBtn?.addEventListener('click', () => {
     const isOpen = menuBtn.getAttribute('aria-expanded') === 'true';
     setMenuOpen(!isOpen);
+  });
+
+  // Always scroll to top on Home when clicking the logo (even if already on "/")
+  homeLogoLink?.addEventListener('click', (e) => {
+    const isHome = window.location.pathname === '/' || window.location.pathname === '';
+    if (!isHome) return; // allow normal navigation to "/"
+
+    e.preventDefault();
+    setMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // normalize URL (remove any hash) without adding history entries
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
   });
 
   mobileMenu?.addEventListener('click', (e) => {
