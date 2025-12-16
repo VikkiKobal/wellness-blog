@@ -63,3 +63,4 @@ func (s *Server) OptionalAuthMiddleware(next http.HandlerFunc) http.HandlerFunc 
 
 
 
+

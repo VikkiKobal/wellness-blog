@@ -17,11 +17,14 @@ const navItems = [
 <header class="header">
   <div class="container header-container">
     <a href="/" class="logo">
-      <svg class="logo-icon" width="131" height="84" viewBox="0 0 131 84" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="42" cy="42" r="40" fill="#8D77AB"/>
-        <circle cx="89" cy="42" r="40" fill="#BAD8B6"/>
-      </svg>
-      <span class="logo-text">Some Logo</span>
+      <img
+        class="logo-img"
+        src="/images/Logo.png"
+        alt="Education and Wellbeing by Antonina Devitska"
+        width="50"
+        height="50"
+        loading="eager"
+      />
     </a>
     
     <nav class="nav">
@@ -118,22 +121,12 @@ const navItems = [
     align-items: center;
     gap: 12px;
   }
-  
-  .logo-icon {
-    width: 50px;
-    height: 32px;
-  }
-  
-  .logo-text {
-    font-family: var(--font-primary);
-    font-weight: 500;
-    font-size: 16px;
-    color: var(--color-white);
-    transition: color 0.3s ease;
-  }
-  
-  .header.scrolled .logo-text {
-    color: var(--color-text-dark);
+
+  .logo-img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    display: block;
   }
   
   .nav {
@@ -364,6 +357,11 @@ const navItems = [
   @media (max-width: 768px) {
     .header-container {
       gap: 16px;
+    }
+
+    .logo-img {
+      width: 54px;
+      height: 54px;
     }
   }
 

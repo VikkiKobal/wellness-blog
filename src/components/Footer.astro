@@ -80,9 +80,14 @@ const currentYear = new Date().getFullYear();
           </div>
           
           <div class="footer-logo-wrapper">
-            <div class="logo-shape">
-              <span class="logo-text">Some Logo</span>
-            </div>
+            <img
+              class="footer-logo-img"
+              src="/images/Logo.png"
+              alt="Education and Wellbeing by Antonina Devitska"
+              loading="lazy"
+              width="130"
+              height="130"
+            />
           </div>
         </div>
       </div>
@@ -241,24 +246,12 @@ const currentYear = new Date().getFullYear();
   .footer-logo-wrapper {
     position: relative;
   }
-  
-  .logo-shape {
-    position: relative;
+
+  .footer-logo-img {
     width: 130px;
-    height: 110px;
-    background: var(--color-white);
-    border-radius: 0 65px 65px 65px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  }
-  
-  .logo-text {
-    font-family: var(--font-primary);
-    font-weight: 500;
-    font-size: 14px;
-    color: var(--color-text-dark);
+    height: auto;
+    display: block;
+    object-fit: contain;
   }
   
   @media (max-width: 968px) {
@@ -361,14 +354,8 @@ const currentYear = new Date().getFullYear();
       height: 28px;
     }
     
-    .logo-shape {
+    .footer-logo-img {
       width: 78px;
-      height: 62px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    .logo-text {
-      font-size: 12px;
     }
   }
 </style>
