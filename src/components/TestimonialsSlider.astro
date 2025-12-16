@@ -22,6 +22,12 @@ const testimonials = [
     icon: '/images/testimonial-rating.svg',
   },
 ];
+
+const slides = [
+  { ...testimonials[testimonials.length - 1], realIndex: testimonials.length - 1, isClone: true, clonePos: 'start' as const },
+  ...testimonials.map((t, i) => ({ ...t, realIndex: i, isClone: false, clonePos: undefined })),
+  { ...testimonials[0], realIndex: 0, isClone: true, clonePos: 'end' as const },
+];
 ---
 
 <section class="testimonials-slider" aria-label="Testimonials">
@@ -32,8 +38,13 @@ const testimonials = [
 
     <div class="slider-window" id="testimonialWindow" role="region" aria-label="Testimonials carousel">
       <div class="slider-track" id="testimonialTrack">
-        {testimonials.map((testimonial, index) => (
-          <article class="testimonial-card" data-index={index}>
+        {slides.map((testimonial) => (
+          <article
+            class:list={['testimonial-card', { 'is-clone': testimonial.isClone }]}
+            data-real-index={testimonial.realIndex}
+            data-is-clone={testimonial.isClone ? 'true' : 'false'}
+            data-clone-pos={testimonial.clonePos}
+          >
             <div class="emoji">
               <img src={testimonial.icon} alt="testimonial icon" />
             </div>
@@ -57,28 +68,43 @@ const testimonials = [
     const testimonials = track?.querySelectorAll('.testimonial-card') ?? [];
     const prev = document.getElementById('testimonialPrev');
     const next = document.getElementById('testimonialNext');
+    // real index (0..n-1)
     let currentIndex = 0;
+    let isJumping = false;
+    let scrollEndTimer;
 
     function setActive(index) {
       currentIndex = Math.max(0, Math.min(index, testimonials.length - 1));
-      testimonials.forEach((card, cardIndex) => {
-        card.classList.toggle('is-active', cardIndex === currentIndex);
+      // Mark active among *real* slides
+      testimonials.forEach((card) => {
+        const real = Number(card.getAttribute('data-real-index') ?? '0');
+        const isClone = card.getAttribute('data-is-clone') === 'true';
+        card.classList.toggle('is-active', !isClone && real === currentIndex);
       });
     }
 
-    function scrollToIndex(index) {
-      const card = testimonials[index];
+    function getRealSlideEl(realIndex) {
+      // choose the non-clone slide
+      return track?.querySelector(`.testimonial-card[data-real-index="${realIndex}"][data-is-clone="false"]`);
+    }
+
+    function scrollToRealIndex(index, behavior = 'smooth') {
+      const card = getRealSlideEl(index);
       if (!card) return;
-      card.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+      card.scrollIntoView({ behavior, inline: 'start', block: 'nearest' });
       setActive(index);
     }
 
     prev?.addEventListener('click', () => {
-      scrollToIndex((currentIndex - 1 + testimonials.length) % testimonials.length);
+      const total = Number(windowEl?.getAttribute('data-real-total') ?? '0');
+      if (!total) return;
+      scrollToRealIndex((currentIndex - 1 + total) % total);
     });
 
     next?.addEventListener('click', () => {
-      scrollToIndex((currentIndex + 1) % testimonials.length);
+      const total = Number(windowEl?.getAttribute('data-real-total') ?? '0');
+      if (!total) return;
+      scrollToRealIndex((currentIndex + 1) % total);
     });
 
     // Update active card based on what is most visible in the window.
@@ -86,11 +112,12 @@ const testimonials = [
       windowEl && testimonials.length
         ? new IntersectionObserver(
             (entries) => {
+              if (isJumping) return;
               let best = { index: currentIndex, ratio: 0 };
               for (const entry of entries) {
                 const el = entry.target;
                 if (!(el instanceof HTMLElement)) continue;
-                const idx = Number(el.dataset.index ?? '0');
+                const idx = Number(el.getAttribute('data-real-index') ?? '0');
                 if (entry.intersectionRatio > best.ratio) {
                   best = { index: idx, ratio: entry.intersectionRatio };
                 }
@@ -105,7 +132,54 @@ const testimonials = [
     testimonials.forEach((card) => observer?.observe(card));
 
     // Init
+    // expose total to handlers without importing
+    windowEl?.setAttribute('data-real-total', String(Math.max(0, (testimonials.length - 2))));
+
+    // Start on the first *real* slide (skip the leading clone)
+    const firstReal = getRealSlideEl(0);
+    if (firstReal) {
+      firstReal.scrollIntoView({ behavior: 'auto', inline: 'start', block: 'nearest' });
+    }
     setActive(0);
+
+    // Loop behavior for swipe: when user snaps to a clone, jump to the corresponding real slide.
+    function handleLoopJump() {
+      if (!windowEl || !track) return;
+
+      // Find the slide closest to the left edge of the window
+      const windowRect = windowEl.getBoundingClientRect();
+      let bestEl = null;
+      let bestDist = Infinity;
+      for (const card of testimonials) {
+        const rect = card.getBoundingClientRect();
+        const dist = Math.abs(rect.left - windowRect.left);
+        if (dist < bestDist) {
+          bestDist = dist;
+          bestEl = card;
+        }
+      }
+      if (!(bestEl instanceof Element)) return;
+
+      const isClone = bestEl.getAttribute('data-is-clone') === 'true';
+      if (!isClone) return;
+
+      const real = Number(bestEl.getAttribute('data-real-index') ?? '0');
+      isJumping = true;
+      scrollToRealIndex(real, 'auto');
+      // allow observer again next tick
+      requestAnimationFrame(() => {
+        isJumping = false;
+      });
+    }
+
+    windowEl?.addEventListener(
+      'scroll',
+      () => {
+        clearTimeout(scrollEndTimer);
+        scrollEndTimer = setTimeout(handleLoopJump, 80);
+      },
+      { passive: true }
+    );
   </script>
 </section>
 
@@ -170,6 +244,10 @@ const testimonials = [
     background: rgba(255, 255, 255, 0.85);
     box-shadow: none;
     scroll-snap-align: start;
+  }
+
+  .testimonial-card.is-clone {
+    opacity: 0.25;
   }
 
   .testimonial-card.is-active {
