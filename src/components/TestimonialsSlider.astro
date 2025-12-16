@@ -30,7 +30,7 @@ const testimonials = [
       <h2>What People Say About My Services</h2>
     </div>
 
-    <div class="slider-window" role="region">
+    <div class="slider-window" id="testimonialWindow" role="region" aria-label="Testimonials carousel">
       <div class="slider-track" id="testimonialTrack">
         {testimonials.map((testimonial, index) => (
           <article class="testimonial-card" data-index={index}>
@@ -52,32 +52,60 @@ const testimonials = [
   </div>
 
   <script type="module">
-    const testimonials = document.querySelectorAll('.testimonial-card');
+    const windowEl = document.getElementById('testimonialWindow');
     const track = document.getElementById('testimonialTrack');
+    const testimonials = track?.querySelectorAll('.testimonial-card') ?? [];
     const prev = document.getElementById('testimonialPrev');
     const next = document.getElementById('testimonialNext');
     let currentIndex = 0;
 
-    function updateSlider(index) {
-      const cardWidth = testimonials[0]?.offsetWidth || 0;
-      track?.style.setProperty('--offset', `-${index * cardWidth}px`);
+    function setActive(index) {
+      currentIndex = Math.max(0, Math.min(index, testimonials.length - 1));
       testimonials.forEach((card, cardIndex) => {
-        card.classList.toggle('is-active', cardIndex === index);
+        card.classList.toggle('is-active', cardIndex === currentIndex);
       });
     }
 
+    function scrollToIndex(index) {
+      const card = testimonials[index];
+      if (!card) return;
+      card.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+      setActive(index);
+    }
+
     prev?.addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
-      updateSlider(currentIndex);
+      scrollToIndex((currentIndex - 1 + testimonials.length) % testimonials.length);
     });
 
     next?.addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % testimonials.length;
-      updateSlider(currentIndex);
+      scrollToIndex((currentIndex + 1) % testimonials.length);
     });
 
-    window.addEventListener('resize', () => updateSlider(currentIndex));
-    updateSlider(currentIndex);
+    // Update active card based on what is most visible in the window.
+    const observer =
+      windowEl && testimonials.length
+        ? new IntersectionObserver(
+            (entries) => {
+              let best = { index: currentIndex, ratio: 0 };
+              for (const entry of entries) {
+                const el = entry.target;
+                if (!(el instanceof HTMLElement)) continue;
+                const idx = Number(el.dataset.index ?? '0');
+                if (entry.intersectionRatio > best.ratio) {
+                  best = { index: idx, ratio: entry.intersectionRatio };
+                }
+              }
+              setActive(best.index);
+            },
+            { root: windowEl, threshold: [0.5, 0.65, 0.8] }
+          )
+        : null;
+
+    observer?.disconnect();
+    testimonials.forEach((card) => observer?.observe(card));
+
+    // Init
+    setActive(0);
   </script>
 </section>
 
@@ -109,15 +137,22 @@ const testimonials = [
   }
 
   .slider-window {
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: visible;
     position: relative;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .slider-window::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
   }
 
   .slider-track {
     display: flex;
     gap: 24px;
-    transition: transform 0.5s ease;
-    transform: translateX(var(--offset, 0));
+    padding: 4px 20px 10px;
   }
 
   .testimonial-card {
@@ -134,6 +169,7 @@ const testimonials = [
     border: 1px solid rgba(17, 82, 62, 0.12);
     background: rgba(255, 255, 255, 0.85);
     box-shadow: none;
+    scroll-snap-align: start;
   }
 
   .testimonial-card.is-active {
@@ -202,6 +238,7 @@ const testimonials = [
     .section-heading h2 {
       font-size: 36px;
     }
+  }
 
   @media (max-width: 768px) {
     .testimonials-slider {
@@ -210,10 +247,11 @@ const testimonials = [
 
     .slider-track {
       gap: 16px;
+      padding: 4px 16px 10px;
     }
 
     .testimonial-card {
-      flex: 0 0 90vw;
+      flex: 0 0 calc(100% - 32px);
       padding: 24px;
     }
 
@@ -221,7 +259,10 @@ const testimonials = [
       font-size: 28px;
       text-align: center;
     }
+
+    .slider-controls {
+      margin-top: 20px;
+    }
   }
-}
 </style>
 
