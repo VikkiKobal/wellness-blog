@@ -16,7 +16,7 @@ const navItems = [
 
 <header class="header">
   <div class="container header-container">
-    <a href="/" class="logo">
+    <a href={currentPage === 'home' ? '#hero' : '/#hero'} class="logo" aria-label="Go to hero section">
       <img
         class="logo-img"
         src="/images/Logo.png"
@@ -373,11 +373,11 @@ const navItems = [
 </style>
 
 <script>
-  const header = document.querySelector('.header');
-  const menuBtn = document.querySelector('.mobile-menu-btn');
+  const header = document.querySelector<HTMLElement>('.header');
+  const menuBtn = document.querySelector<HTMLButtonElement>('.mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
 
-  function setMenuOpen(open) {
+  function setMenuOpen(open: boolean) {
     if (!menuBtn || !mobileMenu) return;
 
     mobileMenu.classList.toggle('open', open);
@@ -387,7 +387,8 @@ const navItems = [
     document.body.classList.toggle('no-scroll', open);
 
     if (open) {
-      mobileMenu.querySelector('a')?.focus();
+      const firstLink = mobileMenu.querySelector('a');
+      if (firstLink instanceof HTMLElement) firstLink.focus();
     } else {
       menuBtn.focus();
     }

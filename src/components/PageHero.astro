@@ -30,18 +30,18 @@ const { title, breadcrumb = [] } = Astro.props;
 <style>
   .page-hero {
     background: var(--gradient-banner);
-    padding: 40px 0 40px;
-    margin-top: 90px;
+    padding: 28px 0 28px;
+    margin-top: 110px;
   }
   
   .page-title {
     font-family: var(--font-primary);
     font-weight: 600;
     font-size: 36px;
-    line-height: 2.07;
+    line-height: 1.25;
     color: var(--color-white);
     text-align: center;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
   }
   
   .breadcrumb {
@@ -75,7 +75,8 @@ const { title, breadcrumb = [] } = Astro.props;
   
   @media (max-width: 768px) {
     .page-hero {
-      padding: 80px 0 40px;
+      padding: 40px 0 22px;
+      margin-top: 96px;
     }
     
     .page-title {
