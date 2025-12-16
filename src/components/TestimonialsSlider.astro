@@ -22,12 +22,14 @@ const testimonials = [
     icon: '/images/testimonial-rating.svg',
   },
 ];
-
-const slides = [
-  { ...testimonials[testimonials.length - 1], realIndex: testimonials.length - 1, isClone: true, clonePos: 'start' as const },
-  ...testimonials.map((t, i) => ({ ...t, realIndex: i, isClone: false, clonePos: undefined })),
-  { ...testimonials[0], realIndex: 0, isClone: true, clonePos: 'end' as const },
-];
+const copies = [0, 1, 2];
+const slides = copies.flatMap((copy) =>
+  testimonials.map((t, i) => ({
+    ...t,
+    realIndex: i,
+    copy,
+  }))
+);
 ---
 
 <section class="testimonials-slider" aria-label="Testimonials">
@@ -40,10 +42,9 @@ const slides = [
       <div class="slider-track" id="testimonialTrack">
         {slides.map((testimonial) => (
           <article
-            class:list={['testimonial-card', { 'is-clone': testimonial.isClone }]}
+            class="testimonial-card"
             data-real-index={testimonial.realIndex}
-            data-is-clone={testimonial.isClone ? 'true' : 'false'}
-            data-clone-pos={testimonial.clonePos}
+            data-copy={testimonial.copy}
           >
             <div class="emoji">
               <img src={testimonial.icon} alt="testimonial icon" />
@@ -66,45 +67,49 @@ const slides = [
     const windowEl = document.getElementById('testimonialWindow');
     const track = document.getElementById('testimonialTrack');
     const testimonials = track?.querySelectorAll('.testimonial-card') ?? [];
+    const realSlides = track?.querySelectorAll('.testimonial-card[data-is-clone="false"]') ?? [];
     const prev = document.getElementById('testimonialPrev');
     const next = document.getElementById('testimonialNext');
     // real index (0..n-1)
     let currentIndex = 0;
     let isJumping = false;
     let scrollEndTimer;
+    let activeEl = null;
 
-    function setActive(index) {
-      currentIndex = Math.max(0, Math.min(index, testimonials.length - 1));
-      // Mark active among *real* slides
-      testimonials.forEach((card) => {
-        const real = Number(card.getAttribute('data-real-index') ?? '0');
-        const isClone = card.getAttribute('data-is-clone') === 'true';
-        card.classList.toggle('is-active', !isClone && real === currentIndex);
-      });
+    // helpers
+    const cards = Array.from(testimonials);
+    const realTotal = Math.max(0, new Set(cards.map((c) => c.getAttribute('data-real-index'))).size);
+
+    function setActiveEl(el) {
+      if (!(el instanceof Element)) return;
+      const real = Number(el.getAttribute('data-real-index') ?? '0');
+      currentIndex = real;
+
+      if (activeEl && activeEl !== el) activeEl.classList.remove('is-active');
+      el.classList.add('is-active');
+      activeEl = el;
     }
 
-    function getRealSlideEl(realIndex) {
-      // choose the non-clone slide
-      return track?.querySelector(`.testimonial-card[data-real-index="${realIndex}"][data-is-clone="false"]`);
-    }
-
-    function scrollToRealIndex(index, behavior = 'smooth') {
-      const card = getRealSlideEl(index);
-      if (!card) return;
-      card.scrollIntoView({ behavior, inline: 'start', block: 'nearest' });
-      setActive(index);
+    function getCopyWidth() {
+      // distance between the start of copy 0 and copy 1
+      const a = track?.querySelector('.testimonial-card[data-copy="0"][data-real-index="0"]');
+      const b = track?.querySelector('.testimonial-card[data-copy="1"][data-real-index="0"]');
+      if (!(a instanceof HTMLElement) || !(b instanceof HTMLElement)) return 0;
+      return b.offsetLeft - a.offsetLeft;
     }
 
     prev?.addEventListener('click', () => {
-      const total = Number(windowEl?.getAttribute('data-real-total') ?? '0');
-      if (!total) return;
-      scrollToRealIndex((currentIndex - 1 + total) % total);
+      if (!activeEl) return;
+      const idx = cards.indexOf(activeEl);
+      const target = cards[idx - 1] ?? cards[cards.length - 1];
+      target?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
     });
 
     next?.addEventListener('click', () => {
-      const total = Number(windowEl?.getAttribute('data-real-total') ?? '0');
-      if (!total) return;
-      scrollToRealIndex((currentIndex + 1) % total);
+      if (!activeEl) return;
+      const idx = cards.indexOf(activeEl);
+      const target = cards[idx + 1] ?? cards[0];
+      target?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
     });
 
     // Update active card based on what is most visible in the window.
@@ -113,16 +118,17 @@ const slides = [
         ? new IntersectionObserver(
             (entries) => {
               if (isJumping) return;
-              let best = { index: currentIndex, ratio: 0 };
+              let bestEl = activeEl;
+              let bestRatio = 0;
               for (const entry of entries) {
                 const el = entry.target;
                 if (!(el instanceof HTMLElement)) continue;
-                const idx = Number(el.getAttribute('data-real-index') ?? '0');
-                if (entry.intersectionRatio > best.ratio) {
-                  best = { index: idx, ratio: entry.intersectionRatio };
+                if (entry.intersectionRatio > bestRatio) {
+                  bestRatio = entry.intersectionRatio;
+                  bestEl = el;
                 }
               }
-              setActive(best.index);
+              if (bestEl) setActiveEl(bestEl);
             },
             { root: windowEl, threshold: [0.5, 0.65, 0.8] }
           )
@@ -131,52 +137,48 @@ const slides = [
     observer?.disconnect();
     testimonials.forEach((card) => observer?.observe(card));
 
-    // Init
-    // expose total to handlers without importing
-    windowEl?.setAttribute('data-real-total', String(Math.max(0, (testimonials.length - 2))));
-
-    // Start on the first *real* slide (skip the leading clone)
-    const firstReal = getRealSlideEl(0);
-    if (firstReal) {
-      firstReal.scrollIntoView({ behavior: 'auto', inline: 'start', block: 'nearest' });
+    // Init: start in the middle copy so the loop never "hits an end".
+    const start = track?.querySelector('.testimonial-card[data-copy="1"][data-real-index="0"]');
+    if (start) {
+      start.scrollIntoView({ behavior: 'auto', inline: 'start', block: 'nearest' });
+      setActiveEl(start);
+    } else if (cards[0]) {
+      setActiveEl(cards[0]);
     }
-    setActive(0);
 
-    // Loop behavior for swipe: when user snaps to a clone, jump to the corresponding real slide.
-    function handleLoopJump() {
-      if (!windowEl || !track) return;
+    function rebalanceInfiniteScroll() {
+      if (!windowEl || !track || !realTotal) return;
+      const copyWidth = getCopyWidth();
+      if (!copyWidth) return;
 
-      // Find the slide closest to the left edge of the window
-      const windowRect = windowEl.getBoundingClientRect();
-      let bestEl = null;
-      let bestDist = Infinity;
-      for (const card of testimonials) {
-        const rect = card.getBoundingClientRect();
-        const dist = Math.abs(rect.left - windowRect.left);
-        if (dist < bestDist) {
-          bestDist = dist;
-          bestEl = card;
-        }
+      // Keep scrollLeft within the middle copy.
+      const leftBound = copyWidth * 0.5;
+      const rightBound = copyWidth * 1.5;
+
+      if (windowEl.scrollLeft < leftBound) {
+        isJumping = true;
+        windowEl.classList.add('is-rebalancing');
+        windowEl.scrollLeft += copyWidth;
+        requestAnimationFrame(() => {
+          windowEl.classList.remove('is-rebalancing');
+          isJumping = false;
+        });
+      } else if (windowEl.scrollLeft > rightBound) {
+        isJumping = true;
+        windowEl.classList.add('is-rebalancing');
+        windowEl.scrollLeft -= copyWidth;
+        requestAnimationFrame(() => {
+          windowEl.classList.remove('is-rebalancing');
+          isJumping = false;
+        });
       }
-      if (!(bestEl instanceof Element)) return;
-
-      const isClone = bestEl.getAttribute('data-is-clone') === 'true';
-      if (!isClone) return;
-
-      const real = Number(bestEl.getAttribute('data-real-index') ?? '0');
-      isJumping = true;
-      scrollToRealIndex(real, 'auto');
-      // allow observer again next tick
-      requestAnimationFrame(() => {
-        isJumping = false;
-      });
     }
 
     windowEl?.addEventListener(
       'scroll',
       () => {
         clearTimeout(scrollEndTimer);
-        scrollEndTimer = setTimeout(handleLoopJump, 80);
+        scrollEndTimer = setTimeout(rebalanceInfiniteScroll, 50);
       },
       { passive: true }
     );
@@ -219,6 +221,10 @@ const slides = [
     scrollbar-width: none; /* Firefox */
   }
 
+  .slider-window.is-rebalancing {
+    scroll-snap-type: none;
+  }
+
   .slider-window::-webkit-scrollbar {
     display: none; /* Chrome/Safari */
   }
@@ -244,10 +250,6 @@ const slides = [
     background: rgba(255, 255, 255, 0.85);
     box-shadow: none;
     scroll-snap-align: start;
-  }
-
-  .testimonial-card.is-clone {
-    opacity: 0.25;
   }
 
   .testimonial-card.is-active {
