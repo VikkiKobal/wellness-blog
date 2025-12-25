@@ -26,6 +26,7 @@ pnpm-debug.log*
 
 # Go backend
 backend/firebase-service-account.json
+backend/serviceAccountKey.json
 backend/.env
 backend/server
 backend/*.exe

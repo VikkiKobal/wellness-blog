@@ -139,8 +139,8 @@ const slides = copies.flatMap((copy) =>
 
     // Init: start in the middle copy so the loop never "hits an end".
     const start = track?.querySelector('.testimonial-card[data-copy="1"][data-real-index="0"]');
-    if (start) {
-      start.scrollIntoView({ behavior: 'auto', inline: 'start', block: 'nearest' });
+    if (start instanceof HTMLElement && windowEl) {
+      windowEl.scrollLeft = start.offsetLeft - 40; // 40 is the track padding-left
       setActiveEl(start);
     } else if (cards[0]) {
       setActiveEl(cards[0]);
@@ -187,7 +187,7 @@ const slides = copies.flatMap((copy) =>
 
 <style>
   .testimonials-slider {
-    padding: 100px 0;
+    padding: 70px 0;
     background: var(--color-bg-soft);
   }
 
@@ -232,7 +232,7 @@ const slides = copies.flatMap((copy) =>
   .slider-track {
     display: flex;
     gap: 24px;
-    padding: 4px 20px 10px;
+    padding: 4px 40px 10px;
   }
 
   .testimonial-card {
@@ -314,6 +314,12 @@ const slides = copies.flatMap((copy) =>
     }
   }
 
+  @media (max-width: 1270px) {
+    .section-heading h2 {
+      font-size: 36px;
+    }
+  }
+
   @media (max-width: 968px) {
     .section-heading h2 {
       font-size: 36px;
@@ -322,17 +328,18 @@ const slides = copies.flatMap((copy) =>
 
   @media (max-width: 768px) {
     .testimonials-slider {
-      padding: 60px 0;
+      padding: 50px 0;
     }
 
     .slider-track {
       gap: 16px;
-      padding: 4px 16px 10px;
+      padding: 4px 20px 10px;
     }
 
     .testimonial-card {
-      flex: 0 0 calc(100% - 32px);
-      padding: 24px;
+      flex: 0 0 calc(100% - 40px);
+      padding: 28px;
+      min-height: 240px;
     }
 
     .section-heading h2 {

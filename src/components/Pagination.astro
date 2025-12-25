@@ -4,62 +4,113 @@ interface Props {
   totalPages?: number;
 }
 
-const { currentPage = 1, totalPages = 10 } = Astro.props;
+const { currentPage = 1, totalPages = 1 } = Astro.props;
 
 // Generate page numbers to display
 const getPageNumbers = () => {
   const pages: (number | string)[] = [];
   
-  if (totalPages <= 5) {
+  if (totalPages <= 7) {
+    // Show all pages if total is 7 or less
     for (let i = 1; i <= totalPages; i++) {
       pages.push(i);
     }
   } else {
+    // Always show first 2 pages
     pages.push(1, 2);
-    if (currentPage > 3) pages.push('...');
+    
+    // Show ellipsis if current page is far from start
+    if (currentPage > 3) {
+      pages.push('...');
+    }
+    
+    // Show current page and neighbors if not already shown
     if (currentPage > 2 && currentPage < totalPages - 1) {
       pages.push(currentPage);
     }
-    if (currentPage < totalPages - 2) pages.push('...');
+    
+    // Show ellipsis if current page is far from end
+    if (currentPage < totalPages - 2) {
+      pages.push('...');
+    }
+    
+    // Always show last 2 pages
     pages.push(totalPages - 1, totalPages);
   }
   
-  // Remove duplicates and keep order
-  return [...new Set(pages)];
+  // Remove duplicates while maintaining order
+  const seen = new Set();
+  return pages.filter(page => {
+    if (seen.has(page)) return false;
+    seen.add(page);
+    return true;
+  });
 };
 
-const pageNumbers = [1, 2, '...', 9, 10]; // Simplified for design match
+const pageNumbers = getPageNumbers();
 ---
 
 <nav class="pagination" aria-label="Pagination">
-  <button 
-    class="pagination-btn arrow" 
-    disabled={currentPage === 1}
-    aria-label="Previous page"
-  >
-    <svg width="8" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M7 1L1.5 6.5L7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </button>
+  {currentPage > 1 ? (
+    <a 
+      href={`/blog?page=${currentPage - 1}`}
+      class="pagination-btn arrow" 
+      aria-label="Previous page"
+    >
+      <svg width="8" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 1L1.5 6.5L7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  ) : (
+    <button 
+      class="pagination-btn arrow" 
+      disabled
+      aria-label="Previous page"
+    >
+      <svg width="8" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 1L1.5 6.5L7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  )}
   
   {pageNumbers.map(page => (
-    <button 
-      class:list={['pagination-btn', 'number', { active: page === currentPage }]}
-      disabled={page === '...'}
-    >
-      {page}
-    </button>
+    page === '...' ? (
+      <span class="pagination-btn ellipsis">...</span>
+    ) : typeof page === 'number' ? (
+      page === currentPage ? (
+        <span class="pagination-btn number active">{page}</span>
+      ) : (
+        <a 
+          href={page === 1 ? '/blog' : `/blog?page=${page}`}
+          class="pagination-btn number"
+        >
+          {page}
+        </a>
+      )
+    ) : null
   ))}
   
-  <button 
-    class="pagination-btn arrow" 
-    disabled={currentPage === totalPages}
-    aria-label="Next page"
-  >
-    <svg width="8" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M1 1L6.5 6.5L1 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </button>
+  {currentPage < totalPages ? (
+    <a 
+      href={`/blog?page=${currentPage + 1}`}
+      class="pagination-btn arrow" 
+      aria-label="Next page"
+    >
+      <svg width="8" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 1L6.5 6.5L1 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  ) : (
+    <button 
+      class="pagination-btn arrow" 
+      disabled
+      aria-label="Next page"
+    >
+      <svg width="8" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 1L6.5 6.5L1 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  )}
 </nav>
 
 <style>
@@ -86,9 +137,10 @@ const pageNumbers = [1, 2, '...', 9, 10]; // Simplified for design match
     font-size: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
+    text-decoration: none;
   }
   
-  .pagination-btn:hover:not(:disabled) {
+  .pagination-btn:hover:not(:disabled):not(.ellipsis) {
     border-color: var(--color-primary);
     color: var(--color-primary);
   }
@@ -97,11 +149,18 @@ const pageNumbers = [1, 2, '...', 9, 10]; // Simplified for design match
     background: var(--color-white);
     border-color: var(--color-primary);
     color: var(--color-primary);
+    cursor: default;
   }
   
   .pagination-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+  
+  .pagination-btn.ellipsis {
+    border: none;
+    background: transparent;
+    cursor: default;
   }
   
   .pagination-btn.arrow {

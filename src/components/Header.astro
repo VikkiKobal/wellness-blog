@@ -16,15 +16,10 @@ const navItems = [
 
 <header class="header">
   <div class="container header-container">
-    <a href="/#top" class="logo" aria-label="Go to homepage" data-scroll-home-top>
-      <img
-        class="logo-img"
-        src="/images/Logo.png"
-        alt="Education and Wellbeing by Antonina Devitska"
-        width="50"
-        height="50"
-        loading="eager"
-      />
+    <a href="/#top" class="mobile-brand" aria-label="Go to homepage" data-scroll-home-top>
+      <span class="brand-dash"></span>
+      <span class="brand-text">Antonina Devitska</span>
+      <span class="brand-dash"></span>
     </a>
     
     <nav class="nav">
@@ -71,6 +66,16 @@ const navItems = [
           <span></span>
         </button>
 
+        <a href="/#top" class="mobile-logo" aria-label="Go to homepage" data-scroll-home-top>
+          <img
+            src="/images/Logo.png"
+            alt="Education and Wellbeing by Antonina Devitska"
+            width="95"
+            height="95"
+            loading="eager"
+          />
+        </a>
+
         <nav class="mobile-nav" aria-label="Mobile navigation">
           <ul class="mobile-nav-list">
             {navItems.map(item => (
@@ -115,18 +120,39 @@ const navItems = [
     justify-content: space-between;
     gap: 40px;
   }
-  
-  .logo {
-    display: flex;
+
+  .mobile-brand {
+    display: none;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 19px;
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
   }
 
-  .logo-img {
-    width: 100px;
-    height: 100px;
-    object-fit: contain;
-    display: block;
+  .mobile-brand:hover {
+    opacity: 0.85;
+  }
+
+  .brand-dash {
+    width: 30px;
+    height: 2px;
+    background-color: var(--color-primary);
+    opacity: 0.6;
+    flex-shrink: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .mobile-brand:hover .brand-dash {
+    opacity: 0.9;
+  }
+
+  .brand-text {
+    line-height: 1;
   }
   
   .nav {
@@ -143,13 +169,14 @@ const navItems = [
   }
   
   .nav-link {
-    font-family: var(--font-primary);
+    font-family: var(--font-secondary);
     font-weight: 500;
-    font-size: 20px;
+    font-size: 17px;
     color: var(--color-text-black);
     position: relative;
     padding: 4px 0;
     transition: color 0.3s ease;
+    letter-spacing: 0.01em;
   }
   
   .nav-link.active {
@@ -180,12 +207,13 @@ const navItems = [
     background: var(--color-primary);
     color: var(--color-white);
     border-radius: 16px;
-    font-family: var(--font-primary);
-    font-weight: 500;
-    font-size: 20px;
+    font-family: var(--font-secondary);
+    font-weight: 600;
+    font-size: 17px;
     transition: all 0.3s ease;
     margin-left: auto;
     margin-right: 0;
+    letter-spacing: 0.01em;
   }
   
   .contact-btn:hover {
@@ -204,6 +232,7 @@ const navItems = [
     gap: 5px;
     padding: 8px;
     cursor: pointer;
+    margin-left: auto;
   }
   
   .mobile-menu-btn span {
@@ -283,6 +312,19 @@ const navItems = [
     transform: rotate(-45deg);
   }
 
+  .mobile-logo {
+    display: block;
+    align-self: center;
+    margin-bottom: 16px;
+  }
+
+  .mobile-logo img {
+    display: block;
+    width: 95px;
+    height: 95px;
+    object-fit: contain;
+  }
+
   .mobile-nav-list {
     list-style: none;
     display: flex;
@@ -291,10 +333,11 @@ const navItems = [
   }
 
   .mobile-nav-link {
-    font-family: var(--font-primary);
+    font-family: var(--font-secondary);
     font-weight: 600;
     font-size: 18px;
     color: var(--color-text-dark);
+    letter-spacing: 0.01em;
   }
 
   .mobile-nav-link.active {
@@ -349,6 +392,13 @@ const navItems = [
       display: none;
     }
 
+    .mobile-brand {
+      display: flex;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
     .mobile-menu-btn {
       display: flex;
     }
@@ -360,8 +410,8 @@ const navItems = [
     }
 
     .logo-img {
-      width: 75px;
-      height: 75px;
+      width: 95px;
+      height: 95px;
     }
   }
 
@@ -374,7 +424,7 @@ const navItems = [
 
 <script>
   const header = document.querySelector<HTMLElement>('.header');
-  const homeLogoLink = document.querySelector<HTMLAnchorElement>('[data-scroll-home-top]');
+  const homeLogoLinks = document.querySelectorAll<HTMLAnchorElement>('[data-scroll-home-top]');
   const menuBtn = document.querySelector<HTMLButtonElement>('.mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
 
@@ -400,18 +450,20 @@ const navItems = [
     setMenuOpen(!isOpen);
   });
 
-  // Always scroll to top on Home when clicking the logo (even if already on "/")
-  homeLogoLink?.addEventListener('click', (e) => {
-    const isHome = window.location.pathname === '/' || window.location.pathname === '';
-    if (!isHome) return; // allow normal navigation to "/"
+  // Always scroll to top on Home when clicking the logo/brand (even if already on "/")
+  homeLogoLinks?.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      const isHome = window.location.pathname === '/' || window.location.pathname === '';
+      if (!isHome) return; // allow normal navigation to "/"
 
-    e.preventDefault();
-    setMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    // normalize URL (remove any hash) without adding history entries
-    if (window.location.hash) {
-      history.replaceState(null, '', window.location.pathname + window.location.search);
-    }
+      e.preventDefault();
+      setMenuOpen(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // normalize URL (remove any hash) without adding history entries
+      if (window.location.hash) {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    });
   });
 
   mobileMenu?.addEventListener('click', (e) => {

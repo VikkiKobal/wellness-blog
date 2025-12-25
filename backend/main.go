@@ -87,6 +87,9 @@ func main() {
 		authClient:  authClient,
 	}
 
+	// Initialize Database
+	initDB()
+
 	// Setup router
 	router := mux.NewRouter()
 
@@ -97,6 +100,22 @@ func main() {
 	api.HandleFunc("/auth/user", server.getUser).Methods("GET")
 	api.HandleFunc("/auth/refresh", server.refreshToken).Methods("POST")
 	api.HandleFunc("/contact", server.contact).Methods("POST")
+
+	// Article Routes
+	api.HandleFunc("/articles", server.getArticles).Methods("GET")
+	api.HandleFunc("/articles", server.AuthMiddleware(server.createArticle)).Methods("POST")
+	api.HandleFunc("/articles/{id}", server.AuthMiddleware(server.updateArticle)).Methods("PUT")
+	api.HandleFunc("/articles/{id}", server.AuthMiddleware(server.deleteArticle)).Methods("DELETE")
+
+	// Course Routes
+	api.HandleFunc("/courses", server.getCourses).Methods("GET")
+	api.HandleFunc("/courses", server.AuthMiddleware(server.createCourse)).Methods("POST")
+	api.HandleFunc("/courses/{id}", server.AuthMiddleware(server.updateCourse)).Methods("PUT")
+	api.HandleFunc("/courses/{id}", server.AuthMiddleware(server.deleteCourse)).Methods("DELETE")
+
+	// Category Routes
+	api.HandleFunc("/categories", server.getCategories).Methods("GET")
+	api.HandleFunc("/categories", server.AuthMiddleware(server.createCategory)).Methods("POST")
 
 	// CORS middleware
 	allowedOrigins := []string{"http://localhost:4321", "http://localhost:3000"}

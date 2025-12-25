@@ -124,6 +124,133 @@ export async function healthCheck(): Promise<{ status: string; service: string; 
   }
 }
 
+// Article types and functions
+export interface Article {
+  id?: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  date: string;
+  category: string;
+  featured: boolean;
+  image: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export async function getArticles(): Promise<Article[]> {
+  const response = await fetch(`${API_BASE_URL}/articles`);
+  if (!response.ok) throw new Error('Failed to fetch articles');
+  return await response.json();
+}
+
+export async function saveArticle(article: Article, idToken: string): Promise<Article> {
+  const method = article.id ? 'PUT' : 'POST';
+  const url = article.id ? `${API_BASE_URL}/articles/${article.id}` : `${API_BASE_URL}/articles`;
+  
+  const response = await fetch(url, {
+    method,
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(article),
+  });
+
+  if (!response.ok) throw new Error('Failed to save article');
+  if (method === 'PUT') return article;
+  return await response.json();
+}
+
+export async function deleteArticle(id: string, idToken: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/articles/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+    },
+  });
+
+  if (!response.ok) throw new Error('Failed to delete article');
+}
+
+// Course types and functions
+export interface Course {
+  id?: string;
+  title: string;
+  description: string;
+  lessons: string;
+  duration: string;
+  price: string;
+  category: string;
+  tags: string[];
+  image: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export async function getCourses(): Promise<Course[]> {
+  const response = await fetch(`${API_BASE_URL}/courses`);
+  if (!response.ok) throw new Error('Failed to fetch courses');
+  return await response.json();
+}
+
+export async function saveCourse(course: Course, idToken: string): Promise<Course> {
+  const method = course.id ? 'PUT' : 'POST';
+  const url = course.id ? `${API_BASE_URL}/courses/${course.id}` : `${API_BASE_URL}/courses`;
+  
+  const response = await fetch(url, {
+    method,
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(course),
+  });
+
+  if (!response.ok) throw new Error('Failed to save course');
+  if (method === 'PUT') return course;
+  return await response.json();
+}
+
+export async function deleteCourse(id: string, idToken: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/courses/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+    },
+  });
+
+  if (!response.ok) throw new Error('Failed to delete course');
+}
+
+// Category types and functions
+export interface Category {
+  id?: string;
+  name: string;
+  type: 'blog' | 'course';
+}
+
+export async function getCategories(): Promise<Category[]> {
+  const response = await fetch(`${API_BASE_URL}/categories`);
+  if (!response.ok) throw new Error('Failed to fetch categories');
+  return await response.json();
+}
+
+export async function saveCategory(category: Category, idToken: string): Promise<Category> {
+  const response = await fetch(`${API_BASE_URL}/categories`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(category),
+  });
+
+  if (!response.ok) throw new Error('Failed to save category');
+  return await response.json();
+}
+
 
 
 

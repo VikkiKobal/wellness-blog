@@ -7,6 +7,7 @@ require (
 	github.com/gorilla/handlers v1.5.2
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1
+	github.com/lib/pq v1.10.9
 	google.golang.org/api v0.257.0
 )
 
@@ -64,6 +65,3 @@ require (
 	google.golang.org/grpc v1.77.0 // indirect
 	google.golang.org/protobuf v1.36.10 // indirect
 )
-
-
-

@@ -23,8 +23,109 @@ const {
     <title>{title}</title>
   </head>
   <body>
+    <script>
+      // Enable small progressive enhancements without breaking no-JS rendering
+      document.documentElement.classList.add('js');
+      requestAnimationFrame(() => document.documentElement.classList.add('is-loaded'));
+
+      // Prevent browsers from restoring previous scroll position when navigating back to "/"
+      // (this was causing the logo click to land on Testimonials first).
+      try {
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+      } catch {}
+
+      const forceTopIfHash = () => {
+        if (location.hash === '#top') window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      };
+      window.addEventListener('load', () => {
+        // Run after load + a couple of ticks to override any late scroll restoration.
+        forceTopIfHash();
+        requestAnimationFrame(forceTopIfHash);
+        setTimeout(forceTopIfHash, 0);
+        setTimeout(forceTopIfHash, 50);
+      });
+    </script>
     <div id="top"></div>
     <slot />
+
+    <script type="module">
+      // Minimal reveal-on-scroll animations (no dependencies)
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduceMotion) {
+        const targets = Array.from(
+          document.querySelectorAll(
+            [
+              // sections / blocks
+              'main section',
+              'main article',
+              // common cards
+              'main .service-card',
+              'main .course-card',
+              'main .blog-card',
+              'main .testimonial-card',
+              'main .value-pill',
+              'main .featured-approach-card',
+              // footer
+              'footer',
+            ].join(',')
+          )
+        ).filter((el) => el instanceof HTMLElement);
+
+        const shouldSkip = (el) => {
+          // Don't animate fixed header / hero banners to avoid "blank above the fold"
+          return (
+            el.classList.contains('hero') ||
+            el.closest('.hero') ||
+            el.classList.contains('page-hero') ||
+            el.closest('.page-hero') ||
+            el.classList.contains('header') ||
+            el.closest('.header')
+          );
+        };
+
+        const setDelay = (el) => {
+          const parent = el.parentElement;
+          if (!parent) return;
+
+          const staggerParents = [
+            '.services-grid',
+            '.courses-grid',
+            '.values-grid',
+            '.featured-approach-grid',
+            '.blog-grid',
+            '.slider-track',
+          ];
+          const doStagger = staggerParents.some((sel) => parent.matches(sel));
+          if (!doStagger) return;
+
+          const siblings = Array.from(parent.children).filter((c) => c instanceof HTMLElement);
+          const idx = siblings.indexOf(el);
+          const delay = Math.min(Math.max(idx, 0), 6) * 60;
+          el.style.setProperty('--reveal-delay', `${delay}ms`);
+        };
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              const el = entry.target;
+              if (!(el instanceof HTMLElement)) continue;
+              if (entry.isIntersecting) {
+                el.classList.add('is-visible');
+                io.unobserve(el);
+              }
+            }
+          },
+          { threshold: 0.15, rootMargin: '0px 0px -10% 0px' }
+        );
+
+        for (const el of targets) {
+          if (shouldSkip(el)) continue;
+          if (!el.classList.contains('reveal')) el.classList.add('reveal');
+          setDelay(el);
+          io.observe(el);
+        }
+      }
+    </script>
   </body>
 </html>
 
@@ -91,6 +192,52 @@ const {
     color: var(--color-text-black);
     line-height: 1.6;
     overflow-x: hidden;
+  }
+
+  /* Smooth page "load-in" */
+  html.js body {
+    opacity: 0;
+  }
+
+  html.js.is-loaded body {
+    opacity: 1;
+    transition: opacity 360ms ease;
+  }
+
+  /* Reveal-on-scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 560ms ease,
+      transform 560ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    html.js body {
+      opacity: 1;
+    }
+
+    html.js.is-loaded body {
+      transition: none;
+    }
+
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
   }
   
   img {
