@@ -9,83 +9,46 @@ import Footer from '../components/Footer.astro';
 import CourseModal from '../components/CourseModal.astro';
 import * as api from '../utils/api';
 
-const categories = [
-  { id: 'featured', name: 'Featured Courses', active: true },
-  { id: 'training', name: 'Teacher Training & Workshops', active: false },
-  { id: 'mentorship', name: 'Mentorship & Consulting', active: false },
-  { id: 'other', name: 'Other Courses & Academic Programs', active: false },
-  { id: 'speaking', name: 'Speaking & Collaborations', active: false },
-];
+// Get active category from URL
+const currentCategory = Astro.url.searchParams.get('category') || 'all';
 
+// Fetch data from Go Backend
 let dbCourses: api.Course[] = [];
+let dbCategories: api.Category[] = [];
+
 try {
-  dbCourses = await api.getCourses();
+  const [coursesResponse, categoriesResponse] = await Promise.all([
+    api.getCourses(),
+    api.getCategories()
+  ]);
+  dbCourses = coursesResponse;
+  // Get only course categories
+  dbCategories = categoriesResponse.filter(cat => cat.type === 'course');
 } catch (error) {
-  console.error('Error fetching courses:', error);
+  console.error('Error fetching data for courses page:', error);
 }
 
-const courses = dbCourses.length > 0 ? dbCourses : [
-  {
-    id: "power-of-you",
-    title: "The Power of You: Resilience, Self-Care & Mindful Living in Uncertain Times",
-    description: "Discover how to build inner resilience and practice self-care strategies that help you thrive even in uncertain times. Learn mindfulness techniques and create sustainable wellbeing habits.",
-    image: "/images/service-1.png",
-    lessons: "12 Lessons",
-    duration: "4 Weeks",
-    price: "$79",
-    tags: ["educators", "leaders", "anyone seeking balance"]
-  },
-  {
-    id: "teaching-uncertainty",
-    title: "Teaching in Times of Uncertainty",
-    description: "Equip yourself with practical strategies to maintain teaching effectiveness during challenging times. Learn adaptive methods and emotional support techniques for both yourself and your students.",
-    image: "/images/service-3.png",
-    lessons: "12 Lessons",
-    duration: "4 Weeks",
-    price: "$69",
-    tags: ["teachers", "educators", "school administrators"]
-  },
-  {
-    id: "digital-tools",
-    title: "Digital Tools for EFL Teaching",
-    description: "Master the latest digital tools and technologies for effective English language teaching. From interactive platforms to assessment tools, enhance your digital teaching capabilities.",
-    image: "/images/service-4.png",
-    lessons: "12 Lessons",
-    duration: "4 Weeks",
-    price: "$59",
-    tags: ["EFL teachers", "language educators", "online instructors"]
-  },
-  {
-    id: "reflective-practice-1",
-    title: "Reflective Practice: Growth Through Reflection",
-    description: "Learn how to use reflection for personal and professional growth, analyze experiences, and improve decision-making skills. Learn how to use reflection for personal and professional growth, analyze experiences.",
-    image: "/images/service-2.png",
-    lessons: "12 Lessons",
-    duration: "4 Weeks",
-    price: "$59",
-    tags: ["students", "professionals", "anyone seeking self-improvement"]
-  },
-  {
-    id: "reflective-practice-2",
-    title: "Reflective Practice: Growth Through Reflection",
-    description: "Deepen your understanding of reflective practice with advanced techniques. Explore journaling methods, peer reflection, and structured frameworks for continuous improvement.",
-    image: "/images/course-5.png",
-    lessons: "12 Lessons",
-    duration: "4 Weeks",
-    price: "$59",
-    tags: ["students", "professionals", "anyone seeking self-improvement"]
-  },
-  {
-    id: "reflective-practice-3",
-    title: "Reflective Practice: Growth Through Reflection",
-    description: "Apply reflective practice in group settings and organizations. Learn facilitation techniques and how to create a culture of continuous learning and improvement.",
-    image: "/images/course-6.png",
-    lessons: "12 Lessons",
-    duration: "4 Weeks",
-    price: "$59",
-    tags: ["students", "professionals", "anyone seeking self-improvement"]
-  },
+// Add "All" category at the beginning
+const categories = [
+  { id: 'all', name: 'All Services', active: currentCategory === 'all' },
+  ...dbCategories.map(cat => ({
+    id: cat.id || '',
+    name: cat.name,
+    active: currentCategory === cat.id
+  }))
 ];
+
+// Filter courses based on active category
+let filteredCourses = dbCourses;
+if (currentCategory !== 'all') {
+  filteredCourses = dbCourses.filter(course => course.category === currentCategory);
+}
+
+const activeCategory = categories.find(c => c.active);
+const isWorkshopCategory = activeCategory?.name.toLowerCase().includes('teacher training');
+const isMentorshipCategory = activeCategory?.name.toLowerCase().includes('mentorship');
+const isSpeakingCategory = activeCategory?.name.toLowerCase().includes('speaking');
+const isOtherCategory = activeCategory?.name.toLowerCase().includes('other courses');
 
 const breadcrumb = [
   { label: 'Home', href: '/' },
@@ -107,7 +70,7 @@ const breadcrumb = [
         <div class="services-header">
           <h2 class="section-title">Explore My Service Areas</h2>
           <p class="section-description">
-            These offerings can be customized for universities, teacher training centers, NGOs, or international partners.          </p>
+            I design and facilitate learning experiences that help educators, students, and adults integrate well-being, resilience, and innovation into their personal and professional growth. My signature programs focus on emotional intelligence, trauma-aware teaching, and mindful, future-ready pedagogy.          </p>
         </div>        
         <div class="filter-wrapper">
           <CategoryFilter categories={categories} />
@@ -115,13 +78,102 @@ const breadcrumb = [
         
         <div class="divider"></div>
         
-        <div class="courses-grid">
-          {courses.map(course => (
-            <CourseCard {...course} />
-          ))}
+        {isWorkshopCategory && (
+          <div class="workshop-description">
+            <h2>Teacher Training & Workshops</h2>
+            <p>I collaborate with universities, schools, NGOs, and international organizations to deliver training in:</p>
+            <ul>
+              <li>SEL and emotional well-being</li>
+              <li>Mindfulness for educators</li>
+              <li>Trauma-informed practices</li>
+              <li>Resilience and self-care in teaching</li>
+              <li>Digital pedagogy</li>
+              <li>Innovative EFL methods</li>
+              <li>Designing learning in crisis and uncertainty</li>
+            </ul>
+            <p>Workshops are practical, grounded, and focused on real change in the classroom and within teaching teams.</p>
+            <div class="workshop-actions">
+              <a href="/contact" class="btn-primary">→ Book a workshop</a>
+              <a href="#previous-workshops" class="btn-secondary">See previous workshops</a>
+            </div>
+          </div>
+        )}
+
+        {isMentorshipCategory && (
+          <div class="workshop-description">
+            <h2>Mentorship & Consulting</h2>
+            <p>I offer 1:1 and institutional consulting for:</p>
+            <ul>
+              <li>Course design and curriculum development</li>
+              <li>SEL integration into university and professional programs</li>
+              <li>Trauma-aware educational practices</li>
+              <li>Designing teacher training systems and PD pathways</li>
+              <li>International collaboration and partnership development</li>
+              <li>Leadership in education</li>
+            </ul>
+            <div class="workshop-actions">
+              <a href="/contact" class="btn-primary">→ Request mentorship</a>
+            </div>
+          </div>
+        )}
+
+        {isSpeakingCategory && (
+          <div class="workshop-description">
+            <h2>Speaking & Collaborations</h2>
+            <p>I speak internationally on topics that connect well-being, education, and innovation.</p>
+            <p>Speaking topics include:</p>
+            <ul>
+              <li>SEL in higher education</li>
+              <li>Teaching in times of crisis</li>
+              <li>Trauma-informed pedagogy</li>
+              <li>Mindful teaching and resilience</li>
+              <li>Innovative EFL methodologies</li>
+              <li>Human-centered education leadership</li>
+              <li>Designing digital learning experiences</li>
+            </ul>
+            <p>I have presented at global conferences including TESOL, IATEFL, EDYOUFest, and international educator forums, and I collaborate with institutions across Europe and beyond.</p>
+            <div class="workshop-actions">
+              <a href="/contact" class="btn-primary">→ Invite me to speak</a>
+              <a href="/projects" class="btn-secondary">Previous conferences</a>
+            </div>
+          </div>
+        )}
+
+        {isOtherCategory && (
+          <div class="workshop-description">
+            <h2>Other Courses & Academic Programs</h2>
+            <p>Available upon request for institutions, programs, and collaborations:</p>
+            <ul>
+              <li>Digital Tools for EFL Teaching</li>
+              <li>Innovative Approaches to TEFL</li>
+              <li>Psychological & Pedagogical Strategies for EFL Learning</li>
+              <li>SEL-integrated university materials for Business, IT, STEM, Engineering</li>
+              <li>SEL modules for veterans in higher education</li>
+            </ul>
+            <p>These offerings can be customized for universities, teacher training centers, NGOs, or international partners.</p>
+            <div class="workshop-actions">
+              <a href="/contact" class="btn-primary">→ Request information</a>
+            </div>
+          </div>
+        )}
+
+        <div class="courses-grid" id="courses-grid">
+          {filteredCourses.length > 0 ? (
+            filteredCourses.map(course => (
+              <CourseCard {...course} />
+            ))
+          ) : (
+            (!isWorkshopCategory && !isMentorshipCategory && !isSpeakingCategory && !isOtherCategory) && (
+              <div class="no-courses">
+                <p>No courses found in this category.</p>
+              </div>
+            )
+          )}
         </div>
         
-        <Pagination currentPage={1} totalPages={10} />
+        {filteredCourses.length > 12 && (
+          <Pagination currentPage={1} totalPages={Math.ceil(filteredCourses.length / 12)} />
+        )}
       </div>
     </section>
   </main>
@@ -129,6 +181,23 @@ const breadcrumb = [
   <Footer />
   <CourseModal />
 </Layout>
+
+<script>
+  // Handle filter clicks
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const category = (btn as HTMLElement).dataset.category;
+      const url = new URL(window.location.href);
+      if (category === 'all') {
+        url.searchParams.delete('category');
+      } else {
+        url.searchParams.set('category', category || 'all');
+      }
+      window.location.href = url.toString();
+    });
+  });
+</script>
 
 <style>
   .courses-section {
@@ -163,6 +232,102 @@ const breadcrumb = [
     background: var(--color-gray);
     margin-bottom: 60px;
   }
+
+  .workshop-description {
+    max-width: 900px;
+    margin: 0 auto 60px;
+    background: #fdfbff;
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(141, 119, 171, 0.1);
+    text-align: center;
+  }
+
+  .workshop-description h2 {
+    font-family: var(--font-primary);
+    font-size: 32px;
+    color: var(--color-primary);
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .workshop-description p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #454545;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .workshop-description ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 40px;
+    text-align: left;
+    max-width: 800px;
+  }
+
+  .workshop-description li {
+    font-size: 17px;
+    line-height: 1.5;
+    color: #333;
+    position: relative;
+    padding-left: 24px;
+  }
+
+  .workshop-description li::before {
+    content: "•";
+    color: var(--color-primary);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+  }
+
+  .workshop-actions {
+    display: flex;
+    gap: 20px;
+    margin-top: 40px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    padding: 14px 32px;
+    background: var(--color-primary);
+    color: white;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    background: var(--color-primary-dark);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    display: inline-block;
+    padding: 13px 31px;
+    color: var(--color-primary);
+    background: transparent;
+    border: 1px solid var(--color-primary);
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-secondary:hover {
+    background: var(--color-primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(141, 119, 171, 0.2);
+  }
   
   .courses-grid {
     display: grid;
@@ -188,6 +353,26 @@ const breadcrumb = [
     .courses-grid {
       grid-template-columns: 1fr;
       gap: 24px;
+    }
+
+    .workshop-description {
+      padding: 30px 20px;
+    }
+
+    .workshop-description ul {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .workshop-actions {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn-primary, .btn-secondary {
+      width: 100%;
+      text-align: center;
     }
   }
 </style>

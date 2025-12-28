@@ -3,6 +3,7 @@ interface Props {
   title: string;
   description: string;
   image: string;
+  href?: string;
   imagePosition?: 'top' | 'bottom';
   variant?: 'default' | 'overlay';
 }
@@ -11,22 +12,31 @@ const {
   title, 
   description, 
   image, 
+  href = '#',
   imagePosition = 'top',
   variant = 'default'
 } = Astro.props;
 ---
 
-<article class:list={['service-card', `image-${imagePosition}`, variant]}>
-  <div class="service-image">
-    <img src={image} alt={title} />
-  </div>
-  <div class="service-content">
-    <h3 class="service-title">{title}</h3>
-    <p class="service-description">{description}</p>
-  </div>
-</article>
+<a href={href} class="service-card-link">
+  <article class:list={['service-card', `image-${imagePosition}`, variant]}>
+    <div class="service-image">
+      <img src={image} alt={title} />
+    </div>
+    <div class="service-content">
+      <h3 class="service-title">{title}</h3>
+      <p class="service-description">{description}</p>
+    </div>
+  </article>
+</a>
 
 <style>
+  .service-card-link {
+    text-decoration: none;
+    display: block;
+    height: 100%;
+  }
+
   .service-card {
     display: flex;
     flex-direction: column;
@@ -34,6 +44,14 @@ const {
     overflow: hidden;
     background: var(--color-green-card);
     height: 100%;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+  }
+
+  .service-card-link:hover .service-card {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(141, 119, 171, 0.15);
+    border-color: rgba(141, 119, 171, 0.2);
   }
   
   .service-card.image-bottom {

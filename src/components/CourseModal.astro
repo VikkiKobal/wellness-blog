@@ -33,8 +33,9 @@
         <div class="modal-actions">
           <button class="buy-btn">
             <span class="buy-text">Buy</span>
+            <span class="btn-divider"></span>
+            <span id="modal-price" class="price">$59</span>
           </button>
-          <span id="modal-price" class="price">$59</span>
         </div>
       </div>
     </div>
@@ -188,34 +189,53 @@
   
   .buy-btn {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 32px;
-    background: var(--color-primary);
-    border: none;
-    border-radius: 18px;
+    align-items: stretch;
+    padding: 0;
+    background: none;
+    border: 2px solid var(--color-primary);
+    border-radius: 14px;
+    overflow: hidden;
     cursor: pointer;
     transition: all 0.3s ease;
+    min-width: 220px;
   }
   
   .buy-btn:hover {
-    background: var(--color-primary-dark);
     transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(141, 119, 171, 0.2);
+  }
+  
+  .btn-divider {
+    width: 2px;
+    background: var(--color-primary);
+    align-self: stretch;
   }
   
   .buy-text {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 24px;
+    background: var(--color-primary);
     font-family: var(--font-secondary);
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 1.48;
-    color: var(--color-white);
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1;
+    color: white;
   }
   
   .price {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 24px;
+    background: transparent;
     font-family: var(--font-secondary);
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 1.48;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1;
     color: var(--color-primary);
   }
   
@@ -284,11 +304,16 @@
     }
     
     .buy-btn {
-      padding: 10px 24px;
+      min-width: 180px;
     }
     
     .buy-text, .price {
-      font-size: 16px;
+      font-size: 15px;
+      padding: 10px 16px;
+    }
+    
+    .btn-divider {
+      width: 1px;
     }
   }
 </style>

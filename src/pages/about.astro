@@ -3,6 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import PageHero from '../components/PageHero.astro';
 import Footer from '../components/Footer.astro';
+import * as api from '../utils/api';
+
+const certificates = await api.getCertificates();
 
 const breadcrumb = [
   { label: 'Home', href: '/' },
@@ -11,23 +14,23 @@ const breadcrumb = [
 
 const socialLinks = [
   { 
-    name: 'LinkedIn', 
-    href: 'https://linkedin.com',
-    icon: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M16.5 0H1.5C0.675 0 0 0.675 0 1.5V16.5C0 17.325 0.675 18 1.5 18H16.5C17.325 18 18 17.325 18 16.5V1.5C18 0.675 17.325 0 16.5 0ZM5.37 15.375H2.67V6.75H5.37V15.375ZM4.02 5.55C3.135 5.55 2.43 4.845 2.43 3.96C2.43 3.075 3.135 2.37 4.02 2.37C4.905 2.37 5.61 3.075 5.61 3.96C5.61 4.845 4.905 5.55 4.02 5.55ZM15.375 15.375H12.675V11.175C12.675 10.14 12.66 8.82 11.25 8.82C9.825 8.82 9.615 9.945 9.615 11.1V15.375H6.915V6.75H9.51V7.95H9.555C9.915 7.275 10.785 6.555 12.09 6.555C14.82 6.555 15.375 8.37 15.375 10.71V15.375Z" fill="currentColor"/>
+    name: 'Facebook', 
+    href: 'https://www.facebook.com/HorvatErikAntonina?mibextid=LQQJ4d&rdid=rQsXyuheqZRclwvF&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F18uuFgH722%2F%3Fmibextid%3DLQQJ4d%23',
+    icon: `<svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6.39703 17.9978V9.80078H9.16203L9.57303 6.59178H6.39703V4.54778C6.39703 3.62178 6.65503 2.98778 7.98403 2.98778H9.66803V0.126781C8.84903 0.0387813 8.02503 -0.00421875 7.20103 0.000781254C4.75703 0.000781254 3.07903 1.49178 3.07903 4.23078V6.58578H0.332031V9.79478H3.08503V17.9978H6.39703Z" fill="currentColor"/>
     </svg>`
   },
   { 
-    name: 'Facebook', 
-    href: 'https://facebook.com',
-    icon: `<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M18 9C18 4.02975 13.9702 0 9 0C4.02975 0 0 4.02975 0 9C0 13.4925 3.29025 17.2162 7.59375 17.8912V11.6016H5.30859V9H7.59375V7.01719C7.59375 4.76156 8.93625 3.51562 10.9931 3.51562C11.9775 3.51562 13.0078 3.69141 13.0078 3.69141V5.90625H11.873C10.755 5.90625 10.4062 6.60019 10.4062 7.3125V9H12.9023L12.5033 11.6016H10.4062V17.8912C14.7098 17.2162 18 13.4925 18 9Z" fill="currentColor"/>
+    name: 'LinkedIn', 
+    href: 'https://www.linkedin.com/in/antonina-devitska-199017266/',
+    icon: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3.58065 16H0.264516V5.31742H3.58065V16ZM1.92097 3.86H1.9C0.754839 3.86 0 3.07097 0 2.08387C0 1.07613 0.776774 0.30968 1.94258 0.30968C3.10839 0.30968 3.84129 1.07613 3.86323 2.08387C3.86323 3.07097 3.10839 3.86 1.92097 3.86ZM16 16H12.6839V10.3277C12.6839 8.99355 12.2097 8.08387 11.0006 8.08387C10.0684 8.08387 9.51226 8.7029 9.27097 9.30129C9.18581 9.50645 9.16387 9.78839 9.16387 10.0716V16H5.84774C5.84774 16 5.89161 6.65548 5.84774 5.31742H9.16387V6.72516C9.60258 6.05935 10.38 5.11097 12.1877 5.11097C14.4335 5.11097 16 6.47742 16 9.91355V16Z" fill="currentColor"/>
     </svg>`
   },
   { 
     name: 'ResearchGate', 
-    href: 'https://researchgate.net',
-    icon: `<div class="rg-badge"><span class="rg-r">R</span><span class="rg-g">G</span></div>`
+    href: 'https://www.researchgate.net/profile/Antonina-Devitska?ev=hdr_xprf',
+    icon: `<span class="rg-text">R<sup>G</sup></span>`
   }
 ];
 
@@ -62,9 +65,9 @@ const valueItems = [
   { title: 'Humanity', description: 'People first always—learning rooted in empathy and care.' },
   { title: 'Clarity', description: 'Simple, intentional communication that keeps focus on what matters.' },
   { title: 'Connection', description: 'Learning grows through relationships, trust, and shared reflection.' },
-  { title: 'Resilience', description: 'Practices that keep educators and learners steady in change.' },
-  { title: 'Innovation', description: 'Future-ready design blending technology with emotional intelligence.' },
-];
+    { title: 'Resilience', description: 'Practices that keep educators and learners steady in change.' },
+    { title: 'Innovation', description: 'Future-ready design blending technology with emotional intelligence.' },
+  ];
 ---
 
 <Layout title="About Me | Antonina Devitska" description="Learn more about Antonina Devitska - educator, mentor, and course designer with 19 years of experience.">
@@ -108,8 +111,59 @@ const valueItems = [
             </div>
           </div>
         </div>
+
+        <!-- Certificates Timeline Section -->
+        {certificates.length > 0 && (
+          <div class="certificates-section">
+            <div class="certificates-header">
+              <h3>Professional Certifications</h3>
+              <a href="https://www.uzhnu.edu.ua/uk/infocentre/80899" target="_blank" rel="noopener noreferrer" class="view-more-certs">
+                More certificates on UzhNU portal →
+              </a>
+              <div class="timeline-line"></div>
+            </div>
+            
+            <div class="certificates-outer-wrapper">
+              <div class="slider-nav prev" id="slider-prev">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </div>
+              <div class="slider-nav next" id="slider-next">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </div>
+              
+              <div class="certificates-slider-container" id="cert-slider-container">
+                <div class="certificates-slider" id="cert-slider">
+                  {certificates.map(cert => (
+                    <div class="cert-card" data-full={cert.image}>
+                      <div class="cert-year">{cert.year}</div>
+                      <div class="cert-image-wrapper">
+                        <img src={cert.image} alt={cert.title} loading="lazy" />
+                        <div class="cert-overlay">
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 3H21V9M21 3L14 10M9 21H3V15M3 21L10 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="cert-info">
+                        <h4>{cert.title}</h4>
+                        <span>{cert.issuer}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div class="slider-dots" id="slider-dots"></div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
+
+    <!-- Lightbox Modal -->
+    <div id="cert-lightbox" class="lightbox">
+      <span class="lightbox-close">&times;</span>
+      <img class="lightbox-content" id="lightbox-img" src="" alt="Certificate" />
+    </div>
   </main>
 
     <section class="approach-section">
@@ -151,9 +205,132 @@ const valueItems = [
   <Footer />
 </Layout>
 
+<script>
+  // Lightbox functionality
+  const lightbox = document.getElementById('cert-lightbox');
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+  const closeBtn = document.querySelector('.lightbox-close');
+  const certCards = document.querySelectorAll('.cert-card');
+
+  certCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const fullImg = card.getAttribute('data-full');
+      if (fullImg && lightbox && lightboxImg) {
+        lightboxImg.src = fullImg;
+        lightbox.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+      }
+    });
+  });
+
+  if (closeBtn && lightbox) {
+    closeBtn.addEventListener('click', () => {
+      lightbox.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    });
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        lightbox.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+    });
+  }
+
+  // Horizontal scroll drag functionality
+  const slider = document.getElementById('cert-slider-container') as HTMLElement;
+  let isDown = false;
+  let startX: number;
+  let scrollLeft: number;
+
+  if (slider) {
+    slider.addEventListener('mousedown', (e) => {
+      isDown = true;
+      slider.classList.add('active');
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+    });
+
+    slider.addEventListener('mouseleave', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
+
+    slider.addEventListener('mouseup', () => {
+      isDown = false;
+      slider.classList.remove('active');
+    });
+
+    slider.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 2;
+      slider.scrollLeft = scrollLeft - walk;
+    });
+  }
+
+  // Slider Navigation Arrows
+  const nextBtn = document.getElementById('slider-next');
+  const prevBtn = document.getElementById('slider-prev');
+
+  if (nextBtn && prevBtn && slider) {
+    nextBtn.addEventListener('click', () => {
+      slider.scrollLeft += 340; // Card width (300) + gap (40)
+    });
+
+    prevBtn.addEventListener('click', () => {
+      slider.scrollLeft -= 340;
+    });
+
+    // Hide/show buttons based on scroll position
+    const updateButtons = () => {
+      prevBtn.style.opacity = slider.scrollLeft <= 0 ? '0' : '1';
+      prevBtn.style.pointerEvents = slider.scrollLeft <= 0 ? 'none' : 'auto';
+      
+      const isEnd = slider.scrollLeft + slider.clientWidth >= slider.scrollWidth - 5;
+      nextBtn.style.opacity = isEnd ? '0' : '1';
+      nextBtn.style.pointerEvents = isEnd ? 'none' : 'auto';
+    };
+
+    slider.addEventListener('scroll', updateButtons);
+    window.addEventListener('resize', updateButtons);
+    updateButtons();
+  }
+
+  // Dots for mobile
+  const dotsContainer = document.getElementById('slider-dots');
+  const certs = document.querySelectorAll('.cert-card');
+  
+  if (dotsContainer && certs.length > 0) {
+    certs.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = `dot ${i === 0 ? 'active' : ''}`;
+      dot.addEventListener('click', () => {
+        if (slider) {
+          const cardWidth = certs[0].clientWidth + 40; // card + gap
+          slider.scrollTo({ left: i * cardWidth, behavior: 'smooth' });
+        }
+      });
+      dotsContainer.appendChild(dot);
+    });
+
+    if (slider) {
+      slider.addEventListener('scroll', () => {
+        const cardWidth = certs[0].clientWidth + 40;
+        const activeIndex = Math.round(slider.scrollLeft / cardWidth);
+        const dots = dotsContainer.querySelectorAll('.dot');
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === activeIndex);
+        });
+      });
+    }
+  }
+</script>
+
 <style>
   .about-section {
-    padding: 60px 0 100px;
+    padding: 60px 0 40px;
   }
   
   .marquee-container {
@@ -190,7 +367,7 @@ const valueItems = [
     height: auto;
     object-fit: cover;
     border-radius: 8px;
-    object-position: top;
+    object-position: center;
   }
   
   .about-text {
@@ -208,67 +385,365 @@ const valueItems = [
   
   .social-links {
     display: flex;
-    gap: 15px;
+    gap: 12px;
   }
   
   .social-link {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: var(--color-white);
+    color: var(--color-primary);
     transition: all 0.3s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
   
   .social-link:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: var(--color-primary);
+    color: var(--color-white);
   }
   
   .social-link :global(svg) {
-    width: 18px;
-    height: 18px;
+    transition: transform 0.3s ease;
   }
   
-  .social-link :global(svg path) {
-    fill: var(--color-primary);
-  }
-  
-  .social-link :global(.rg-badge) {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .social-link :global(.rg-r) {
-    font-family: var(--font-accent);
+  .social-link :global(.rg-text) {
+    font-family: var(--font-primary);
     font-weight: 700;
-    font-size: 18px;
+    font-size: 12px;
     color: var(--color-primary);
-    position: absolute;
-    left: 4px;
-    top: 2px;
+    transition: color 0.3s ease;
   }
-  
-  .social-link :global(.rg-g) {
-    font-family: var(--font-accent);
-    font-weight: 700;
-    font-size: 10px;
-    color: var(--color-primary);
-    position: absolute;
-    right: 5px;
-    top: 5px;
+
+  .social-link :global(.rg-text sup) {
+    font-size: 8px;
+    vertical-align: super;
+  }
+
+  .social-link:hover :global(.rg-text) {
+    color: var(--color-white);
   }
 
   .approach-section {
     padding: 0px 0 120px;
     background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(234,246,243,0.6) 100%);
+  }
+
+  /* Certificates Section */
+  .certificates-section {
+    margin-top: 40px;
+    position: relative;
+    padding: 10px 0;
+  }
+
+  .certificates-outer-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  .certificates-header {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .certificates-header h3 {
+    font-size: 32px;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+    font-family: var(--font-primary);
+  }
+
+  .view-more-certs {
+    display: inline-block;
+    font-family: var(--font-secondary);
+    font-size: 14px;
+    color: var(--color-primary);
+    text-decoration: none;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+  }
+
+  .view-more-certs:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+    transform: translateX(5px);
+  }
+
+  .timeline-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(141, 119, 171, 0.3) 50%, transparent 100%);
+    width: 100%;
+    position: relative;
+    margin-top: 15px;
+  }
+
+  .certificates-slider-container {
+    overflow-x: auto;
+    padding: 40px 20px 30px;
+    cursor: grab;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .certificates-slider-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .slider-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(141, 119, 171, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .dot.active {
+    background: var(--color-primary);
+    transform: scale(1.2);
+  }
+
+  @media (min-width: 769px) {
+    .slider-dots { display: none; }
+  }
+
+  .slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: var(--color-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(141, 119, 171, 0.1);
+  }
+
+  .slider-nav:hover {
+    background: var(--color-primary);
+    color: var(--color-white);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .slider-nav.prev { left: -25px; }
+  .slider-nav.next { right: -25px; }
+
+  @media (max-width: 1200px) {
+    .slider-nav.prev { left: 10px; }
+    .slider-nav.next { right: 10px; }
+  }
+
+  @media (max-width: 768px) {
+    .slider-nav { display: none; }
+    
+    .certificates-section {
+      margin-top: 40px;
+      padding: 10px 0;
+    }
+
+    .certificates-header h3 {
+      font-size: 26px;
+    }
+
+    .certificates-slider-container {
+      padding: 30px 10px 20px;
+    }
+
+    .cert-card {
+      flex: 0 0 85vw;
+      max-width: 300px;
+      padding: 10px 10px 20px;
+      scroll-snap-align: center;
+    }
+
+    .cert-image-wrapper {
+      height: 170px;
+    }
+
+    .cert-card:nth-child(odd) { margin-top: -10px; }
+    .cert-card:nth-child(even) { margin-top: 10px; }
+  }
+
+  .certificates-slider {
+    display: flex;
+    gap: 40px;
+    padding-left: 10px;
+    align-items: center;
+  }
+
+  .cert-card {
+    flex: 0 0 300px;
+    background: var(--color-white);
+    padding: 12px 12px 24px;
+    border-radius: 4px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05), 0 1px 8px rgba(0,0,0,0.02);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    transform: rotate(var(--rotation, 0deg));
+    animation: float 6s ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+    scroll-snap-align: center;
+  }
+
+  .cert-card::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    width: 70px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(141, 119, 171, 0.1);
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+
+  /* Give random-like rotations and delays to cards */
+  .cert-card:nth-child(odd) { --rotation: -1.5deg; --delay: 0s; margin-top: -20px; }
+  .cert-card:nth-child(even) { --rotation: 1.5deg; --delay: -2s; margin-top: 20px; }
+  .cert-card:nth-child(3n) { --rotation: 1deg; --delay: -4s; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(var(--rotation)); }
+    50% { transform: translateY(-10px) rotate(calc(var(--rotation) + 0.5deg)); }
+  }
+
+  .cert-card:hover {
+    transform: translateY(-15px) rotate(0deg) scale(1.02) !important;
+    animation-play-state: paused;
+    box-shadow: 0 20px 40px rgba(141, 119, 171, 0.15);
+    z-index: 20;
+  }
+
+  .cert-year {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    background: var(--color-primary);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    box-shadow: 0 4px 10px rgba(141, 119, 171, 0.3);
+    z-index: 5;
+    border: 3px solid var(--color-white);
+  }
+
+  .cert-image-wrapper {
+    position: relative;
+    height: 200px;
+    background: #f8f8f8;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+  }
+
+  .cert-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .cert-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(141, 119, 171, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(2px);
+  }
+
+  .cert-info {
+    padding: 0 10px;
+    text-align: left;
+  }
+
+  .cert-info h4 {
+    font-family: var(--font-primary);
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: var(--color-text-dark);
+    line-height: 1.3;
+  }
+
+  .cert-info span {
+    display: block;
+    font-size: 13px;
+    color: var(--color-text-muted);
+    font-family: var(--font-secondary);
+    letter-spacing: 0.02em;
+  }
+
+  /* Lightbox */
+  .lightbox {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 40px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox-content {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgba(255,255,255,0.1);
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
   }
 
   .approach-intro {

@@ -14,24 +14,40 @@ let article: api.Article | null = null;
 let recentArticles: api.Article[] = [];
 
 try {
-  const articles = await api.getArticles();
-  article = articles.find(a => a.id === id) || null;
-  
-  if (article) {
-    recentArticles = articles
-      .filter(a => a.id !== id)
-      .slice(0, 3);
+  if (!id) {
+    throw new Error('No article ID provided');
   }
-} catch (error) {
-  console.error('Error fetching article:', error);
-}
 
-if (!article) {
+  // 1. Fetch only the specific article (Full Optimization)
+  article = await api.getArticle(id);
+  
+  if (!article) {
+    throw new Error('Article not found in database');
+  }
+  
+  // 2. Fetch all articles for the "Recent" section
+  const allArticles = await api.getArticles();
+  recentArticles = allArticles
+    .filter(a => a.id !== id)
+    .slice(0, 3);
+
+} catch (error) {
+  console.error(`[Blog SSR Error] ID: ${id}:`, error);
+  // If we can't find the article, redirect to 404
   return Astro.redirect('/404');
 }
 
 // Convert Markdown to HTML
 const contentHtml = await marked(article.content);
+
+// Clean excerpt/content snippet for meta description
+const cleanSnippet = (text: string, length: number) => {
+  if (!text) return '';
+  const plainText = text.replace(/[#*`_~\[\]()]/g, ''); // Basic markdown removal
+  return plainText.length > length ? plainText.substring(0, length) + '...' : plainText;
+};
+
+const metaDescription = article.excerpt || cleanSnippet(article.content, 160);
 
 const breadcrumb = [
   { label: 'Home', href: '/' },
@@ -40,7 +56,7 @@ const breadcrumb = [
 ];
 ---
 
-<Layout title={`${article.title} | Antonina Devitska`} description={article.excerpt}>
+<Layout title={`${article.title} | Antonina Devitska`} description={metaDescription}>
   <Header currentPage="blog" />
   
   <main>
@@ -57,11 +73,16 @@ const breadcrumb = [
             <img src="/images/about-portrait.png" alt={article.author} />
           </div>
           <div class="author-info">
-            <span class="author-name">{article.author || 'Antonina Devitska'}</span>
+            <span class="author-name">
+              {article.author || 'Antonina Devitska'}
+            </span>
           </div>
           <div class="article-date">
-            <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20.5833 4.33334H19.5V3.25001C19.5 2.96376 19.3862 2.68922 19.1835 2.48652C18.9808 2.28382 18.7062 2.17001 18.42 2.17001C18.1337 2.17001 17.8592 2.28382 17.6565 2.48652C17.4538 2.68922 17.34 2.96376 17.34 3.25001V4.33334H8.66V3.25001C8.66 2.96376 8.54619 2.68922 8.34349 2.48652C8.14079 2.28382 7.86625 2.17001 7.58 2.17001C7.29375 2.17001 7.01921 2.28382 6.81651 2.48652C6.61381 2.68922 6.5 2.96376 6.5 3.25001V4.33334H5.41667C4.55797 4.33334 3.73453 4.67455 3.12066 5.28842C2.50679 5.90229 2.16559 6.72572 2.16559 7.58441V21.6667C2.16559 22.5254 2.50679 23.3488 3.12066 23.9627C3.73453 24.5766 4.55797 24.9178 5.41667 24.9178H20.5833C21.442 24.9178 22.2655 24.5766 22.8793 23.9627C23.4932 23.3488 23.8344 22.5254 23.8344 21.6667V7.58441C23.8344 6.72572 23.4932 5.90229 22.8793 5.28842C22.2655 4.67455 21.442 4.33334 20.5833 4.33334ZM21.6667 21.6667C21.6667 21.953 21.5529 22.2275 21.3502 22.4302C21.1475 22.6329 20.8729 22.7467 20.5867 22.7467H5.41667C5.13042 22.7467 4.85588 22.6329 4.65318 22.4302C4.45048 22.2275 4.33667 21.953 4.33667 21.6667V10.8333H21.6667V21.6667ZM21.6667 8.66667H4.33667V7.58441C4.33667 7.29816 4.45048 7.02363 4.65318 6.82093C4.85588 6.61823 5.13042 6.50441 5.41667 6.50441H6.5V7.58441C6.5 7.87066 6.61381 8.1452 6.81651 8.3479C7.01921 8.5506 7.29375 8.66441 7.58 8.66441C7.86625 8.66441 8.14079 8.5506 8.34349 8.3479C8.54619 8.1452 8.66 7.87066 8.66 7.58441V6.50441H17.34V7.58441C17.34 7.87066 17.4538 8.1452 17.6565 8.3479C17.8592 8.5506 18.1337 8.66441 18.42 8.66441C18.7062 8.66441 18.9808 8.5506 19.1835 8.3479C19.3862 8.1452 19.5 7.87066 19.5 7.58441V6.50441H20.5833C20.8696 6.50441 21.1441 6.61823 21.3468 6.82093C21.5495 7.02363 21.6633 7.29816 21.6633 7.58441V8.66667H21.6667Z" fill="currentColor"/>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
             <span>{article.date}</span>
           </div>
@@ -88,7 +109,7 @@ const breadcrumb = [
                   <a href={`/blog/${recentArticle.id}`}>
                     <img src={recentArticle.image || '/images/blog-1.png'} alt={recentArticle.title} />
                     <h3>{recentArticle.title}</h3>
-                    <p>{recentArticle.excerpt}</p>
+                    <p>{recentArticle.excerpt || cleanSnippet(recentArticle.content, 100)}</p>
                   </a>
                 </div>
               ))}
@@ -111,8 +132,10 @@ const breadcrumb = [
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 32px;
+    margin: 0 auto 32px;
     flex-wrap: wrap;
+    max-width: 932px; /* Same as featured-image */
+    padding: 0 10px;
   }
   
   .author-avatar {
@@ -135,16 +158,24 @@ const breadcrumb = [
     font-size: 16px;
     color: #323232;
   }
+
+  .author-name svg {
+    color: var(--color-primary);
+  }
   
   .article-date {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     font-family: var(--font-secondary);
     font-weight: 400;
     font-size: 15px;
     color: #666;
     margin-left: auto;
+  }
+
+  .article-date svg {
+    color: var(--color-primary);
   }
 
   @media (max-width: 600px) {
@@ -160,13 +191,10 @@ const breadcrumb = [
     }
   }
   
-  .article-date svg {
-    color: var(--color-primary);
-  }
-  
   .featured-image {
     width: 100%;
     max-width: 932px;
+    height: 500px;
     margin: 0 auto 50px;
     border-radius: 5px;
     overflow: hidden;
@@ -174,13 +202,15 @@ const breadcrumb = [
   
   .featured-image img {
     width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: cover;
+    object-position: center;
   }
   
   .article-content {
     max-width: 932px;
     margin: 0 auto;
+    padding: 0 10px;
   }
   
   .article-content :global(p) {
@@ -252,6 +282,7 @@ const breadcrumb = [
   .recent-articles {
     max-width: 932px;
     margin: 0 auto;
+    padding: 0 10px;
   }
   
   .section-title {
@@ -301,6 +332,11 @@ const breadcrumb = [
   @media (max-width: 768px) {
     .article-page {
       padding: 40px 0 80px;
+    }
+
+    .featured-image {
+      height: 300px;
+      margin-bottom: 30px;
     }
     
     .author-section {

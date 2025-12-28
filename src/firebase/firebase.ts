@@ -20,6 +20,20 @@ const firebaseConfig = {
   measurementId: import.meta.env.PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
+// Check if config is loaded (don't log the actual keys)
+if (typeof window !== 'undefined') {
+  const missingKeys = Object.entries(firebaseConfig)
+    .filter(([key, value]) => !value && key !== 'measurementId')
+    .map(([key]) => key);
+  
+  if (missingKeys.length > 0) {
+    console.error('Firebase config is missing keys:', missingKeys);
+    console.warn('Make sure you have a .env file with PUBLIC_FIREBASE_ keys');
+  } else {
+    console.log('Firebase config loaded successfully');
+  }
+}
+
 const app = initializeApp(firebaseConfig);
 
 if (typeof window !== 'undefined') {

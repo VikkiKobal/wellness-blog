@@ -61,8 +61,27 @@
 
   <!-- Admin Panel -->
   <div id="admin-panel" class="admin-container" hidden>
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+    
+    <header class="mobile-header">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="var(--color-primary)" stroke-width="2"/>
+        </svg>
+        <div class="logo-title">ADMIN</div>
+      </div>
+      <button id="mobile-menu-toggle" class="mobile-nav-toggle">
+        <span style="font-size: 14px; font-weight: 700; color: var(--color-primary);">MENU</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </header>
+
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside id="admin-sidebar" class="sidebar">
       <div class="sidebar-header">
         <div class="logo">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
@@ -75,6 +94,12 @@
             <div class="logo-subtitle">Antonina Devitska</div>
           </div>
         </div>
+        <button id="sidebar-close" class="mobile-nav-toggle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
 
       <nav class="sidebar-nav">
@@ -100,6 +125,23 @@
             <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2"/>
           </svg>
           <span>Categories</span>
+        </button>
+        <button class="nav-item" data-tab="projects">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2"/>
+            <polyline points="9 22 9 12 15 12 15 22" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          <span>Projects</span>
+        </button>
+        <button class="nav-item" data-tab="certs">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 22L2 17L12 12L22 17L12 22Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M2 12V17" stroke="currentColor" stroke-width="2"/>
+            <path d="M22 12V17" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 12V22" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          <span>Certificates</span>
         </button>
       </nav>
 
@@ -128,11 +170,6 @@
             <div class="form-group">
               <label>Title *</label>
               <input type="text" name="title" required placeholder="Enter article title" />
-            </div>
-
-            <div class="form-group">
-              <label>Excerpt *</label>
-              <textarea name="excerpt" rows="2" required placeholder="Short description for article cards"></textarea>
             </div>
 
             <div class="form-group">
@@ -171,7 +208,7 @@
             <div class="image-upload-section">
               <label>Article Image (optional)</label>
               <div class="image-upload-area" id="article-upload-area">
-                <input type="file" id="article-image-upload" accept="image/*" hidden />
+                <input type="file" id="article-image-upload" accept="image/*" style="display: none" />
                 <div class="upload-placeholder" id="article-upload-placeholder">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
                     <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -265,7 +302,7 @@ anyone seeking balance"></textarea>
             <div class="image-upload-section">
               <label>Course Image (optional)</label>
               <div class="image-upload-area" id="course-upload-area">
-                <input type="file" id="course-image-upload" accept="image/*" hidden />
+                <input type="file" id="course-image-upload" accept="image/*" style="display: none" />
                 <div class="upload-placeholder" id="course-upload-placeholder">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
                     <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -306,6 +343,7 @@ anyone seeking balance"></textarea>
         <div class="content-section">
           <h2>New Category</h2>
           <form id="category-form" class="content-form">
+            <input type="hidden" id="category-id" name="id" />
             <div class="form-group">
               <label>Name *</label>
               <input type="text" name="name" required placeholder="Enter category name" />
@@ -313,12 +351,13 @@ anyone seeking balance"></textarea>
             <div class="form-group">
               <label>Type *</label>
               <select name="type" required>
+                <option value="course" selected>Course</option>
                 <option value="blog">Blog</option>
-                <option value="course">Course</option>
               </select>
             </div>
             <div class="form-actions">
               <button type="submit" class="btn-primary">Save Category</button>
+              <button type="button" id="category-cancel-btn" class="btn-secondary" hidden>Cancel</button>
             </div>
           </form>
         </div>
@@ -329,13 +368,153 @@ anyone seeking balance"></textarea>
         </div>
       </div>
 
+      <!-- Projects Tab -->
+      <div id="projects-tab" class="tab-content">
+        <div class="content-section">
+          <h2>New Project</h2>
+          <form id="project-form" class="content-form">
+            <input type="hidden" id="project-id" name="id" />
+            
+            <div class="form-group">
+              <label>Title *</label>
+              <input type="text" name="title" required placeholder="Enter project title" />
+            </div>
+
+            <div class="form-group">
+              <label>Description *</label>
+              <textarea name="description" rows="3" required placeholder="Short description"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Additional Detail (optional)</label>
+              <textarea name="detail" rows="2" placeholder="Extra details or sub-description"></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Link Label (optional)</label>
+                <input type="text" name="linkLabel" placeholder="e.g., Learn more" />
+              </div>
+
+              <div class="form-group">
+                <label>Link URL (optional)</label>
+                <input type="text" name="linkHref" placeholder="e.g., #details or https://..." />
+              </div>
+            </div>
+
+            <input type="hidden" name="image" id="project-image-url" />
+            
+            <div class="image-upload-section">
+              <label>Project Image (optional)</label>
+              <div class="image-upload-area" id="project-upload-area">
+                <input type="file" id="project-image-upload" accept="image/*" style="display: none" />
+                <div class="upload-placeholder" id="project-upload-placeholder">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M17 8L12 3L7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M12 3V15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                  <p>Click to upload or drag and drop</p>
+                  <span>Recommended: Landscape orientation</span>
+                </div>
+                <div class="image-preview" id="project-image-preview" hidden>
+                  <img src="" alt="Preview" />
+                  <button type="button" class="remove-image" id="project-remove-image">✕</button>
+                </div>
+                <div class="upload-progress" id="project-upload-progress" hidden>
+                  <div class="progress-bar">
+                    <div class="progress-fill" id="project-progress-fill"></div>
+                  </div>
+                  <span id="project-upload-status">Uploading...</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">Save Project</button>
+              <button type="button" id="project-cancel-btn" class="btn-secondary" hidden>Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="content-section">
+          <h2>Project Cards</h2>
+          <ul id="projects-list" class="content-list"></ul>
+        </div>
+      </div>
+
+      <!-- Certificates Tab -->
+      <div id="certs-tab" class="tab-content">
+        <div class="content-section">
+          <h2>New Certificate</h2>
+          <form id="cert-form" class="content-form">
+            <input type="hidden" id="cert-id" name="id" />
+            
+            <div class="form-group">
+              <label>Certificate Title *</label>
+              <input type="text" name="title" required placeholder="e.g., Advanced SEL Certification" />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Issuer *</label>
+                <input type="text" name="issuer" required placeholder="e.g., International SEL Association" />
+              </div>
+
+              <div class="form-group">
+                <label>Year *</label>
+                <input type="text" name="year" required placeholder="e.g., 2023" />
+              </div>
+            </div>
+
+            <input type="hidden" name="image" id="cert-image-url" />
+            
+            <div class="image-upload-section">
+              <label>Certificate Image (PNG/JPG)</label>
+              <div class="image-upload-area" id="cert-upload-area">
+                <input type="file" id="cert-image-upload" accept="image/*" style="display: none" />
+                <div class="upload-placeholder" id="cert-upload-placeholder">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                    <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M17 8L12 3L7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M12 3V15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                  <p>Click to upload or drag and drop</p>
+                  <span>Upload the certificate scan or photo</span>
+                </div>
+                <div class="image-preview" id="cert-image-preview" hidden>
+                  <img src="" alt="Preview" />
+                  <button type="button" class="remove-image" id="cert-remove-image">✕</button>
+                </div>
+                <div class="upload-progress" id="cert-upload-progress" hidden>
+                  <div class="progress-bar">
+                    <div class="progress-fill" id="cert-progress-fill"></div>
+                  </div>
+                  <span id="cert-upload-status">Uploading...</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">Save Certificate</button>
+              <button type="button" id="cert-cancel-btn" class="btn-secondary" hidden>Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="content-section">
+          <h2>Your Certificates</h2>
+          <ul id="certs-list" class="content-list"></ul>
+        </div>
+      </div>
+
       <!-- Global Status Message -->
       <div id="status-toast" class="status-toast"></div>
     </main>
   </div>
 
-  <script type="module">
-    import '/src/scripts/admin.ts';
+  <script>
+    import '../scripts/admin.ts';
   </script>
 
   <style is:global>
@@ -591,6 +770,8 @@ anyone seeking balance"></textarea>
       top: 0;
       box-shadow: var(--shadow-sm);
       visibility: visible;
+      z-index: 100;
+      transition: transform 0.3s ease;
     }
 
     .admin-container[hidden] .sidebar,
@@ -602,12 +783,33 @@ anyone seeking balance"></textarea>
     .sidebar-header {
       padding: 24px 20px;
       border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .sidebar .logo {
       display: flex;
       align-items: center;
       gap: 14px;
+    }
+
+    .mobile-nav-toggle {
+      display: none;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      color: var(--color-text);
+      cursor: pointer;
+      padding: 8px 12px;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .mobile-nav-toggle:hover {
+      background: var(--color-white);
+      border-color: var(--color-primary);
     }
 
     .sidebar .logo svg {
@@ -633,6 +835,7 @@ anyone seeking balance"></textarea>
     .sidebar-nav {
       flex: 1;
       padding: 20px 16px;
+      overflow-y: auto;
     }
 
     .nav-item {
@@ -702,6 +905,7 @@ anyone seeking balance"></textarea>
       margin-left: 280px;
       padding: 40px;
       max-width: 1400px;
+      width: calc(100% - 280px);
     }
 
     .tab-content {
@@ -710,6 +914,12 @@ anyone seeking balance"></textarea>
 
     .tab-content.active {
       display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .content-section {
@@ -763,6 +973,7 @@ anyone seeking balance"></textarea>
       display: flex;
       gap: 12px;
       padding-top: 8px;
+      flex-wrap: wrap;
     }
 
     .content-form .btn-primary {
@@ -813,12 +1024,12 @@ anyone seeking balance"></textarea>
 
     .image-upload-area:hover {
       border-color: var(--color-primary);
-      background: rgba(17, 82, 62, 0.02);
+      background: rgba(141, 119, 171, 0.02);
     }
 
     .image-upload-area.drag-over {
       border-color: var(--color-primary);
-      background: rgba(17, 82, 62, 0.05);
+      background: rgba(141, 119, 171, 0.05);
       transform: scale(1.01);
     }
 
@@ -892,7 +1103,7 @@ anyone seeking balance"></textarea>
     .progress-bar {
       width: 100%;
       height: 8px;
-      background: rgba(17, 82, 62, 0.1);
+      background: rgba(141, 119, 171, 0.1);
       border-radius: 4px;
       overflow: hidden;
       margin-bottom: 12px;
@@ -971,6 +1182,7 @@ anyone seeking balance"></textarea>
       justify-content: space-between;
       align-items: flex-start;
       gap: 16px;
+      flex-wrap: wrap;
     }
 
     .content-info strong {
@@ -980,6 +1192,7 @@ anyone seeking balance"></textarea>
       color: var(--color-text);
       line-height: 1.3;
       flex: 1;
+      min-width: 200px;
     }
 
     .article-badges {
@@ -1125,31 +1338,40 @@ anyone seeking balance"></textarea>
       box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
     }
 
-    @media (max-width: 968px) {
-      .content-list li {
-        flex-direction: column;
-      }
+    .btn-reorder {
+      transition: all 0.2s ease;
+      padding: 6px 10px;
+      font-size: 14px;
+      background: #f3f4f6;
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    
+    .btn-reorder:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
 
-      .article-preview {
-        width: 100%;
-        height: 240px;
-      }
+    .btn-reorder:not(:disabled):hover {
+      background: #e5e7eb;
+      transform: scale(1.1);
+    }
 
-      .content-info {
-        padding: 20px;
-      }
+    .category-item {
+      padding: 12px 20px !important;
+    }
 
-      .content-actions {
-        flex-direction: row;
-        padding: 16px;
-        border-left: none;
-        border-top: 1px solid var(--color-border);
-      }
+    .category-actions {
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 12px !important;
+    }
 
-      .btn-edit,
-      .btn-danger {
-        flex: 1;
-      }
+    .reorder-btns {
+      display: flex;
+      gap: 4px;
+      margin-right: 8px;
     }
 
     /* Status Toast */
@@ -1183,64 +1405,166 @@ anyone seeking balance"></textarea>
       color: white;
     }
 
+    /* Mobile Header */
+    .mobile-header {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: var(--color-white);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0 16px;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 90;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .mobile-header .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mobile-header .logo-title {
+      font-size: 16px;
+      color: var(--color-primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
     /* Responsive */
     @media (max-width: 1024px) {
       .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .mobile-header {
+        display: flex;
+      }
+
+      .mobile-nav-toggle {
+        display: flex;
       }
 
       .main-content {
         margin-left: 0;
+        margin-top: 64px;
         padding: 24px 16px;
+        width: 100%;
       }
 
-      .sidebar-nav {
-        display: flex;
-        gap: 8px;
-        padding: 16px;
-        overflow-x: auto;
+      .sidebar-header .mobile-nav-toggle {
+        display: block;
       }
 
-      .nav-item {
-        margin-bottom: 0;
-        flex-shrink: 0;
-      }
-
-      .logo-subtitle {
+      .sidebar-overlay {
         display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 95;
+      }
+
+      .sidebar-overlay.active {
+        display: block;
       }
     }
 
     @media (max-width: 768px) {
       .login-card {
         padding: 32px 24px;
+        border-radius: 16px;
+      }
+
+      .login-header h1 {
+        font-size: 24px;
+      }
+
+      .content-section {
+        padding: 20px;
+        border-radius: 12px;
+      }
+
+      .content-section h2 {
+        font-size: 20px;
       }
 
       .form-row {
         grid-template-columns: 1fr;
+        gap: 16px;
       }
 
       .content-list li {
         flex-direction: column;
       }
 
-      .content-actions {
+      .article-preview {
         width: 100%;
+        height: 180px;
+      }
+
+      .content-info {
+        padding: 16px;
+      }
+
+      .content-actions {
+        flex-direction: row;
+        width: 100%;
+        padding: 12px;
+        border-left: none;
+        border-top: 1px solid var(--color-border);
+        background: #fdfdfd;
       }
 
       .btn-edit,
       .btn-danger {
         flex: 1;
+        padding: 10px;
+        font-size: 13px;
       }
 
-      .nav-item span {
-        display: none;
+      .content-meta {
+        gap: 12px;
+      }
+
+      .status-toast {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        max-width: none;
       }
 
       .nav-item {
-        padding: 12px;
+        padding: 12px 16px;
+      }
+
+      .nav-item span {
+        display: inline !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .form-actions {
+        flex-direction: column;
+      }
+      
+      .form-actions button {
+        width: 100%;
+      }
+
+      .article-header strong {
+        font-size: 18px;
       }
     }
   </style>

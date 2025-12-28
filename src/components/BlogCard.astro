@@ -26,15 +26,19 @@ const { title, category, date, author, image, href = '#' } = Astro.props;
       
       <div class="blog-meta">
         <span class="meta-item">
-          <svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5.5 6C6.16304 6 6.79893 5.73661 7.26777 5.26777C7.73661 4.79893 8 4.16304 8 3.5C8 2.83696 7.73661 2.20107 7.26777 1.73223C6.79893 1.26339 6.16304 1 5.5 1C4.83696 1 4.20107 1.26339 3.73223 1.73223C3.26339 2.20107 3 2.83696 3 3.5C3 4.16304 3.26339 4.79893 3.73223 5.26777C4.20107 5.73661 4.83696 6 5.5 6Z" fill="#96989B"/>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
           </svg>
           {author}
         </span>
 
         <span class="meta-item">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.5 2H8.5V1.5C8.5 1.36739 8.44732 1.24021 8.35355 1.14645C8.25979 1.05268 8.13261 1 8 1C7.86739 1 7.74021 1.05268 7.64645 1.14645C7.55268 1.24021 7.5 1.36739 7.5 1.5V2H4.5V1.5C4.5 1.36739 4.44732 1.24021 4.35355 1.14645C4.25979 1.05268 4.13261 1 4 1C3.86739 1 3.74021 1.05268 3.64645 1.14645C3.55268 1.24021 3.5 1.36739 3.5 1.5V2H2.5C2.10218 2 1.72064 2.15804 1.43934 2.43934C1.15804 2.72064 1 3.10218 1 3.5V9.5C1 9.89782 1.15804 10.2794 1.43934 10.5607C1.72064 10.842 2.10218 11 2.5 11H9.5C9.89782 11 10.2794 10.842 10.5607 10.5607C10.842 10.2794 11 9.89782 11 9.5V3.5C11 3.10218 10.842 2.72064 10.5607 2.43934C10.2794 2.15804 9.89782 2 9.5 2Z" fill="#96989B"/>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
           </svg>
           {date}
         </span>
@@ -76,6 +80,7 @@ const { title, category, date, author, image, href = '#' } = Astro.props;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     transition: transform 0.4s ease;
   }
 
@@ -132,9 +137,13 @@ const { title, category, date, author, image, href = '#' } = Astro.props;
   .meta-item {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     font-size: 13px;
     color: var(--color-gray);
+  }
+
+  .meta-item svg {
+    color: var(--color-primary);
   }
 
   @media (max-width: 1270px) {

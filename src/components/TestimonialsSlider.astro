@@ -50,8 +50,10 @@ const slides = copies.flatMap((copy) =>
               <img src={testimonial.icon} alt="testimonial icon" />
             </div>
             <p class="quote">{testimonial.quote}</p>
-            <p class="author">{testimonial.name}</p>
-            <p class="role">{testimonial.role}</p>
+            <div class="testimonial-footer">
+              <p class="author">{testimonial.name}</p>
+              <p class="role">{testimonial.role}</p>
+            </div>
           </article>
         ))}
       </div>
@@ -66,122 +68,154 @@ const slides = copies.flatMap((copy) =>
   <script type="module">
     const windowEl = document.getElementById('testimonialWindow');
     const track = document.getElementById('testimonialTrack');
-    const testimonials = track?.querySelectorAll('.testimonial-card') ?? [];
-    const realSlides = track?.querySelectorAll('.testimonial-card[data-is-clone="false"]') ?? [];
     const prev = document.getElementById('testimonialPrev');
     const next = document.getElementById('testimonialNext');
-    // real index (0..n-1)
-    let currentIndex = 0;
-    let isJumping = false;
-    let scrollEndTimer;
+    
     let activeEl = null;
+    let scrollTimeout;
+    let isJumping = false;
 
-    // helpers
-    const cards = Array.from(testimonials);
-    const realTotal = Math.max(0, new Set(cards.map((c) => c.getAttribute('data-real-index'))).size);
+    const cards = Array.from(track?.querySelectorAll('.testimonial-card') ?? []);
 
     function setActiveEl(el) {
       if (!(el instanceof Element)) return;
-      const real = Number(el.getAttribute('data-real-index') ?? '0');
-      currentIndex = real;
-
       if (activeEl && activeEl !== el) activeEl.classList.remove('is-active');
       el.classList.add('is-active');
       activeEl = el;
     }
 
     function getCopyWidth() {
-      // distance between the start of copy 0 and copy 1
       const a = track?.querySelector('.testimonial-card[data-copy="0"][data-real-index="0"]');
       const b = track?.querySelector('.testimonial-card[data-copy="1"][data-real-index="0"]');
       if (!(a instanceof HTMLElement) || !(b instanceof HTMLElement)) return 0;
       return b.offsetLeft - a.offsetLeft;
     }
 
-    prev?.addEventListener('click', () => {
-      if (!activeEl) return;
-      const idx = cards.indexOf(activeEl);
-      const target = cards[idx - 1] ?? cards[cards.length - 1];
-      target?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
-    });
-
-    next?.addEventListener('click', () => {
-      if (!activeEl) return;
-      const idx = cards.indexOf(activeEl);
-      const target = cards[idx + 1] ?? cards[0];
-      target?.scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
-    });
-
-    // Update active card based on what is most visible in the window.
-    const observer =
-      windowEl && testimonials.length
-        ? new IntersectionObserver(
-            (entries) => {
-              if (isJumping) return;
-              let bestEl = activeEl;
-              let bestRatio = 0;
-              for (const entry of entries) {
-                const el = entry.target;
-                if (!(el instanceof HTMLElement)) continue;
-                if (entry.intersectionRatio > bestRatio) {
-                  bestRatio = entry.intersectionRatio;
-                  bestEl = el;
-                }
-              }
-              if (bestEl) setActiveEl(bestEl);
-            },
-            { root: windowEl, threshold: [0.5, 0.65, 0.8] }
-          )
-        : null;
-
-    observer?.disconnect();
-    testimonials.forEach((card) => observer?.observe(card));
-
-    // Init: start in the middle copy so the loop never "hits an end".
-    const start = track?.querySelector('.testimonial-card[data-copy="1"][data-real-index="0"]');
-    if (start instanceof HTMLElement && windowEl) {
-      windowEl.scrollLeft = start.offsetLeft - 40; // 40 is the track padding-left
-      setActiveEl(start);
-    } else if (cards[0]) {
-      setActiveEl(cards[0]);
-    }
-
-    function rebalanceInfiniteScroll() {
-      if (!windowEl || !track || !realTotal) return;
+    // SILENT REBALANCE: Jumps between copies without animation
+    function rebalance() {
+      if (!windowEl || isJumping) return;
       const copyWidth = getCopyWidth();
       if (!copyWidth) return;
 
-      // Keep scrollLeft within the middle copy.
-      const leftBound = copyWidth * 0.5;
-      const rightBound = copyWidth * 1.5;
-
-      if (windowEl.scrollLeft < leftBound) {
-        isJumping = true;
-        windowEl.classList.add('is-rebalancing');
-        windowEl.scrollLeft += copyWidth;
-        requestAnimationFrame(() => {
-          windowEl.classList.remove('is-rebalancing');
-          isJumping = false;
-        });
-      } else if (windowEl.scrollLeft > rightBound) {
-        isJumping = true;
-        windowEl.classList.add('is-rebalancing');
+      const scrollLeft = windowEl.scrollLeft;
+      
+      // If we've moved too far into copy 2 or back into copy 0, jump back to copy 1
+      if (scrollLeft >= copyWidth * 1.8) {
+        windowEl.style.scrollSnapType = 'none';
         windowEl.scrollLeft -= copyWidth;
-        requestAnimationFrame(() => {
-          windowEl.classList.remove('is-rebalancing');
-          isJumping = false;
-        });
+        windowEl.style.scrollSnapType = 'x mandatory';
+      } else if (scrollLeft <= copyWidth * 0.2) {
+        windowEl.style.scrollSnapType = 'none';
+        windowEl.scrollLeft += copyWidth;
+        windowEl.style.scrollSnapType = 'x mandatory';
       }
     }
 
-    windowEl?.addEventListener(
-      'scroll',
-      () => {
-        clearTimeout(scrollEndTimer);
-        scrollEndTimer = setTimeout(rebalanceInfiniteScroll, 50);
-      },
-      { passive: true }
-    );
+    next?.addEventListener('click', () => {
+      if (!windowEl || !activeEl) return;
+      const idx = cards.indexOf(activeEl);
+      const target = cards[idx + 1];
+      
+      if (target) {
+        windowEl.scrollTo({
+          left: target.offsetLeft,
+          behavior: 'smooth'
+        });
+      } else {
+        const firstInMiddle = track.querySelector('.testimonial-card[data-copy="1"][data-real-index="0"]');
+        if (firstInMiddle instanceof HTMLElement) {
+          windowEl.scrollTo({
+            left: firstInMiddle.offsetLeft,
+            behavior: 'smooth'
+          });
+        }
+      }
+    });
+
+    prev?.addEventListener('click', () => {
+      if (!windowEl || !activeEl) return;
+      const idx = cards.indexOf(activeEl);
+      const target = cards[idx - 1];
+      
+      if (target) {
+        windowEl.scrollTo({
+          left: target.offsetLeft,
+          behavior: 'smooth'
+        });
+      } else {
+        const lastInMiddle = track.querySelector(`.testimonial-card[data-copy="1"][data-real-index="${new Set(cards.map(c => c.dataset.realIndex)).size - 1}"]`);
+        if (lastInMiddle instanceof HTMLElement) {
+          windowEl.scrollTo({
+            left: lastInMiddle.offsetLeft,
+            behavior: 'smooth'
+          });
+        }
+      }
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+          // Highlight logic is now handled by the scroll proximity
+        }
+      });
+    }, { root: windowEl, threshold: 0.5 });
+
+    cards.forEach(card => observer.observe(card));
+
+    // CUSTOM ACTIVE HIGHLIGHT BASED ON CENTER
+    function updateActiveByCenter() {
+      if (!windowEl) return;
+      const windowCenter = windowEl.scrollLeft + (windowEl.offsetWidth / 2);
+      
+      let closestCard = null;
+      let minDistance = Infinity;
+
+      cards.forEach(card => {
+        const cardCenter = card.offsetLeft + (card.offsetWidth / 2);
+        const distance = Math.abs(windowCenter - cardCenter);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestCard = card;
+        }
+      });
+
+      if (closestCard) setActiveEl(closestCard);
+    }
+
+    // Initial position: Start in copy 1 (middle)
+    const startCard = track?.querySelector('.testimonial-card[data-copy="1"][data-real-index="0"]');
+    if (startCard instanceof HTMLElement) {
+      windowEl.scrollLeft = startCard.offsetLeft;
+      setActiveEl(startCard);
+    }
+
+    // Check for rebalance after scroll stops
+    windowEl?.addEventListener('scroll', () => {
+      clearTimeout(scrollTimeout);
+      updateActiveByCenter();
+      scrollTimeout = setTimeout(rebalance, 100);
+    }, { passive: true });
+
+    // --- AUTO SCROLL ---
+    let autoScrollInterval;
+    const startAutoScroll = () => {
+      stopAutoScroll();
+      autoScrollInterval = setInterval(() => {
+        next?.click();
+      }, 5000); // Scroll every 5 seconds
+    };
+
+    const stopAutoScroll = () => {
+      if (autoScrollInterval) clearInterval(autoScrollInterval);
+    };
+
+    // Pause on hover
+    windowEl?.addEventListener('mouseenter', stopAutoScroll);
+    windowEl?.addEventListener('mouseleave', startAutoScroll);
+    
+    // Initial start
+    startAutoScroll();
   </script>
 </section>
 
@@ -219,10 +253,7 @@ const slides = copies.flatMap((copy) =>
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none; /* Firefox */
-  }
-
-  .slider-window.is-rebalancing {
-    scroll-snap-type: none;
+    width: 100%;
   }
 
   .slider-window::-webkit-scrollbar {
@@ -232,29 +263,30 @@ const slides = copies.flatMap((copy) =>
   .slider-track {
     display: flex;
     gap: 24px;
-    padding: 4px 40px 10px;
+    padding: 10px 0 40px;
   }
 
   .testimonial-card {
-    flex: 0 0 460px;
+    flex: 0 0 calc((100% - 48px) / 3); /* Exactly 3 cards with 2 gaps of 24px */
     border-radius: 32px;
     padding: 40px;
-    min-height: 260px;
+    min-height: 320px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    opacity: 0.6;
-    transform: scale(0.95);
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    border: 1px solid rgba(17, 82, 62, 0.12);
-    background: rgba(255, 255, 255, 0.85);
-    box-shadow: none;
+    gap: 20px;
+    opacity: 1;
+    transform: none;
+    border: 1px solid rgba(141, 119, 171, 0.12);
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
     scroll-snap-align: start;
+    transition: none;
   }
 
+  /* No special highlight for active card as requested */
   .testimonial-card.is-active {
-    opacity: 1;
-    transform: scale(1);
+    border-color: rgba(141, 119, 171, 0.12);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
   }
 
   .emoji {
@@ -274,14 +306,21 @@ const slides = copies.flatMap((copy) =>
   }
 
   .author {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 18px;
-    margin-top: auto;
+    color: var(--color-text-black);
   }
 
   .role {
-    font-size: 16px;
+    font-size: 14px;
     color: var(--color-text-muted);
+    margin-top: 2px;
+  }
+
+  .testimonial-footer {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0,0,0,0.05);
   }
 
   .slider-controls {
@@ -309,20 +348,8 @@ const slides = copies.flatMap((copy) =>
 
   @media (max-width: 1100px) {
     .testimonial-card {
-      flex: 0 0 380px;
+      flex: 0 0 calc((100% - 24px) / 2); /* 2 cards */
       padding: 32px;
-    }
-  }
-
-  @media (max-width: 1270px) {
-    .section-heading h2 {
-      font-size: 36px;
-    }
-  }
-
-  @media (max-width: 968px) {
-    .section-heading h2 {
-      font-size: 36px;
     }
   }
 
@@ -333,11 +360,11 @@ const slides = copies.flatMap((copy) =>
 
     .slider-track {
       gap: 16px;
-      padding: 4px 20px 10px;
+      padding: 10px 0 40px;
     }
 
     .testimonial-card {
-      flex: 0 0 calc(100% - 40px);
+      flex: 0 0 100%; /* 1 card */
       padding: 28px;
       min-height: 240px;
     }

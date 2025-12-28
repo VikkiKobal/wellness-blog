@@ -103,6 +103,7 @@ func main() {
 
 	// Article Routes
 	api.HandleFunc("/articles", server.getArticles).Methods("GET")
+	api.HandleFunc("/articles/{id}", server.getArticle).Methods("GET")
 	api.HandleFunc("/articles", server.AuthMiddleware(server.createArticle)).Methods("POST")
 	api.HandleFunc("/articles/{id}", server.AuthMiddleware(server.updateArticle)).Methods("PUT")
 	api.HandleFunc("/articles/{id}", server.AuthMiddleware(server.deleteArticle)).Methods("DELETE")
@@ -115,7 +116,24 @@ func main() {
 
 	// Category Routes
 	api.HandleFunc("/categories", server.getCategories).Methods("GET")
+	api.HandleFunc("/categories/reorder", server.AuthMiddleware(server.reorderCategories)).Methods("PUT")
 	api.HandleFunc("/categories", server.AuthMiddleware(server.createCategory)).Methods("POST")
+	api.HandleFunc("/categories/{id}", server.AuthMiddleware(server.updateCategory)).Methods("PUT")
+	api.HandleFunc("/categories/{id}", server.AuthMiddleware(server.deleteCategory)).Methods("DELETE")
+
+	// Project Routes
+	api.HandleFunc("/projects", server.getProjects).Methods("GET")
+	api.HandleFunc("/projects", server.AuthMiddleware(server.createProject)).Methods("POST")
+	api.HandleFunc("/projects/reorder", server.AuthMiddleware(server.reorderProjects)).Methods("PUT")
+	api.HandleFunc("/projects/{id}", server.AuthMiddleware(server.updateProject)).Methods("PUT")
+	api.HandleFunc("/projects/{id}", server.AuthMiddleware(server.deleteProject)).Methods("DELETE")
+
+	// Certificate Routes
+	api.HandleFunc("/certificates", server.getCertificates).Methods("GET")
+	api.HandleFunc("/certificates", server.AuthMiddleware(server.createCertificate)).Methods("POST")
+	api.HandleFunc("/certificates/reorder", server.AuthMiddleware(server.reorderCertificates)).Methods("PUT")
+	api.HandleFunc("/certificates/{id}", server.AuthMiddleware(server.updateCertificate)).Methods("PUT")
+	api.HandleFunc("/certificates/{id}", server.AuthMiddleware(server.deleteCertificate)).Methods("DELETE")
 
 	// CORS middleware
 	allowedOrigins := []string{"http://localhost:4321", "http://localhost:3000"}

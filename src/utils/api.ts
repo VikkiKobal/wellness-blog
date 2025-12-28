@@ -145,6 +145,15 @@ export async function getArticles(): Promise<Article[]> {
   return await response.json();
 }
 
+export async function getArticle(id: string): Promise<Article> {
+  const response = await fetch(`${API_BASE_URL}/articles/${id}`);
+  if (!response.ok) {
+    if (response.status === 404) throw new Error('Article not found');
+    throw new Error('Failed to fetch article');
+  }
+  return await response.json();
+}
+
 export async function saveArticle(article: Article, idToken: string): Promise<Article> {
   const method = article.id ? 'PUT' : 'POST';
   const url = article.id ? `${API_BASE_URL}/articles/${article.id}` : `${API_BASE_URL}/articles`;
@@ -229,6 +238,7 @@ export interface Category {
   id?: string;
   name: string;
   type: 'blog' | 'course';
+  sort_order?: number;
 }
 
 export async function getCategories(): Promise<Category[]> {
@@ -237,9 +247,25 @@ export async function getCategories(): Promise<Category[]> {
   return await response.json();
 }
 
+export async function reorderCategories(categoryIDs: string[], idToken: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/categories/reorder`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(categoryIDs),
+  });
+
+  if (!response.ok) throw new Error('Failed to reorder categories');
+}
+
 export async function saveCategory(category: Category, idToken: string): Promise<Category> {
-  const response = await fetch(`${API_BASE_URL}/categories`, {
-    method: 'POST',
+  const method = category.id ? 'PUT' : 'POST';
+  const url = category.id ? `${API_BASE_URL}/categories/${category.id}` : `${API_BASE_URL}/categories`;
+
+  const response = await fetch(url, {
+    method,
     headers: {
       'Authorization': `Bearer ${idToken}`,
       'Content-Type': 'application/json',
@@ -248,7 +274,141 @@ export async function saveCategory(category: Category, idToken: string): Promise
   });
 
   if (!response.ok) throw new Error('Failed to save category');
+  if (method === 'PUT') return category;
   return await response.json();
+}
+
+export async function deleteCategory(id: string, idToken: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/categories/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+    },
+  });
+
+  if (!response.ok) throw new Error('Failed to delete category');
+}
+
+// Project types and functions
+export interface Project {
+  id?: string;
+  title: string;
+  description: string;
+  detail: string;
+  linkLabel: string;
+  linkHref: string;
+  image: string;
+  sort_order?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export async function getProjects(): Promise<Project[]> {
+  const response = await fetch(`${API_BASE_URL}/projects`);
+  if (!response.ok) throw new Error('Failed to fetch projects');
+  return await response.json();
+}
+
+export async function saveProject(project: Project, idToken: string): Promise<Project> {
+  const method = project.id ? 'PUT' : 'POST';
+  const url = project.id ? `${API_BASE_URL}/projects/${project.id}` : `${API_BASE_URL}/projects`;
+  
+  const response = await fetch(url, {
+    method,
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(project),
+  });
+
+  if (!response.ok) throw new Error('Failed to save project');
+  if (method === 'PUT') return project;
+  return await response.json();
+}
+
+export async function deleteProject(id: string, idToken: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/projects/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+    },
+  });
+
+  if (!response.ok) throw new Error('Failed to delete project');
+}
+
+export async function reorderProjects(projectIDs: string[], idToken: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/projects/reorder`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(projectIDs),
+  });
+
+  if (!response.ok) throw new Error('Failed to reorder projects');
+}
+
+// Certificate types and functions
+export interface Certificate {
+  id?: string;
+  title: string;
+  issuer: string;
+  year: string;
+  image: string;
+  sort_order?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export async function getCertificates(): Promise<Certificate[]> {
+  const response = await fetch(`${API_BASE_URL}/certificates`);
+  if (!response.ok) throw new Error('Failed to fetch certificates');
+  return await response.json();
+}
+
+export async function saveCertificate(certificate: Certificate, idToken: string): Promise<Certificate> {
+  const method = certificate.id ? 'PUT' : 'POST';
+  const url = certificate.id ? `${API_BASE_URL}/certificates/${certificate.id}` : `${API_BASE_URL}/certificates`;
+  
+  const response = await fetch(url, {
+    method,
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(certificate),
+  });
+
+  if (!response.ok) throw new Error('Failed to save certificate');
+  if (method === 'PUT') return certificate;
+  return await response.json();
+}
+
+export async function deleteCertificate(id: string, idToken: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/certificates/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+    },
+  });
+
+  if (!response.ok) throw new Error('Failed to delete certificate');
+}
+
+export async function reorderCertificates(certIDs: string[], idToken: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/certificates/reorder`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${idToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(certIDs),
+  });
+
+  if (!response.ok) throw new Error('Failed to reorder certificates');
 }
 
 
