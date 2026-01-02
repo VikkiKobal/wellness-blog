@@ -3,14 +3,6 @@
 ---
 
 <section id="hero" class="hero">
-  <div class="hero-bg">
-    <div class="hero-circle-outline"></div>
-    <div class="hero-circle-gradient"></div>
-    <div class="hero-image-wrapper">
-      <img src="/images/hero-portrait.png" alt="Antonina Devitska" class="hero-image" />
-    </div>
-  </div>
-  
   <div class="container hero-container">
     <div class="hero-content">
       <div class="hero-heading">
@@ -27,7 +19,7 @@
       <p class="hero-description">
         I am an educator, mentor, and course designer helping teachers, universities, and institutions bring well-being, resilience, and innovation into the learning process.
         My work bridges research, global experience, and mindful, trauma-informed practice
-              </p>
+      </p>
       
       <div class="hero-actions">
         <a href="/courses" class="btn btn-primary hero-btn">
@@ -37,7 +29,14 @@
           Invite me to speak
         </a>
       </div>
-      
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-circle-outline"></div>
+      <div class="hero-circle-gradient"></div>
+      <div class="hero-image-wrapper">
+        <img src="/images/hero-portrait.png" alt="Antonina Devitska" class="hero-image" />
+      </div>
     </div>
   </div>
 </section>
@@ -45,26 +44,51 @@
 <style>
   .hero {
     position: relative;
-    min-height: calc(100vh - 80px);
-    padding: 60px 0 80px;
+    min-height: 100vh;
+    padding: 160px 0 80px; /* Трохи підняв базу (було 170px) */
     overflow: hidden;
   }
-  
-  .hero-bg {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 60%;
-    height: 100%;
-    pointer-events: none;
+
+  @media (min-width: 1600px) {
+    .hero {
+      padding: 130px 0 80px; /* Трохи підняв для найбільших екранів (було 140px) */
+    }
   }
   
+  .hero-container {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Changed from space-between to keep them together */
+    gap: clamp(40px, 8vw, 100px); /* Responsive gap */
+    padding: 0 60px; /* Increased from 40px to give more space on the left */
+    margin: 0 auto;
+    max-width: 1440px; /* Slightly increased to match common layout widths */
+  }
+
+  .hero-content {
+    max-width: 658px;
+    flex: 0 1 auto; /* Allow it to shrink but not grow beyond max-width */
+  }
+
+  .hero-visual {
+    position: relative;
+    flex: 0 0 auto;
+    width: clamp(400px, 35vw, 540px); /* Responsive size for the visual block */
+    height: clamp(400px, 35vw, 540px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .hero-circle-outline {
     position: absolute;
-    top: 110px;
-    right: -20px;
-    width: 560px;
-    height: 560px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
     border: 3px solid var(--color-primary);
     border-radius: 50%;
     opacity: 0.5;
@@ -72,10 +96,11 @@
   
   .hero-circle-gradient {
     position: absolute;
-    top: 135px;
-    right: 5px;
-    width: 510px;
-    height: 510px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
     border-radius: 50%;
     background: var(--gradient-hero);
     opacity: 0.8;
@@ -83,60 +108,17 @@
   
   .hero-image-wrapper {
     position: absolute;
-    top: 135px;
-    right: 5px;
-    width: 510px;
-    height: 510px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
     z-index: 2;
     border-radius: 50%;
     overflow: hidden;
-  }
-
-  @media (min-width: 1270px) {
-    .hero-circle-outline {
-      right: -20px;
-    }
-    .hero-circle-gradient,
-    .hero-image-wrapper {
-      right: 5px;
-    }
-  }
-
-  @media (min-width: 1285px) {
-    .hero-circle-outline {
-      right: 30px;
-    }
-    .hero-circle-gradient,
-    .hero-image-wrapper {
-      right: 55px;
-    }
-  }
-
-  @media (min-width: 1290px) {
-    .hero-circle-outline {
-      right: 60px;
-    }
-    .hero-circle-gradient,
-    .hero-image-wrapper {
-      right: 85px;
-    }
-  }
-
-  .hero-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-  }
-
-  .hero-container {
-    position: relative;
-    z-index: 3;
-  }
-
-  .hero-content {
-    max-width: 658px;
-    padding-top: 60px;
+    /* Fix for browser clipping issues */
+    transform: translate(-50%, -50%) translateZ(0);
+    isolation: isolate;
   }
 
   .hero-heading {
@@ -146,8 +128,8 @@
   .hero-heading h1 {
     font-family: var(--font-primary);
     font-weight: 600;
-    font-size: 50px;
-    line-height: 1.25;
+    font-size: clamp(44px, 3.2vw, 50px); /* Reduced from 54px to fit better on large screens */
+    line-height: 1.2;
     color: var(--color-text-dark);
   }
 
@@ -177,8 +159,8 @@
   .hero-description {
     font-family: var(--font-primary);
     font-weight: 400;
-    font-size: 22px;
-    line-height: 1.39;
+    font-size: clamp(18px, 1.5vw, 22px); /* Slightly reduced for better balance */
+    line-height: 1.4;
     color: var(--color-text-black);
     margin-bottom: 50px;
     max-width: 650px;
@@ -197,53 +179,50 @@
     padding: 12px 22px;
     font-size: 20px;
   }
-  
+
+  .hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
   /* Tablet landscape / Small Desktop: 969px - 1270px */
   @media (max-width: 1270px) and (min-width: 969px) {
     .hero {
-      padding: 130px 0 70px;
+      min-height: 100vh; /* Повертаємо на весь екран, щоб сховати наступну секцію */
+      display: flex;
+      align-items: center;
+      padding: 140px 0 60px; /* Збільшив верхній відступ ще більше, щоб опустити вміст */
     }
     
     .hero-container {
-      padding-left: clamp(40px, 5vw, 80px);
+      gap: 60px; /* Збільшуємо проміжок */
+      padding: 0 60px;
     }
     
-    .hero-bg {
-      width: 50%;
-    }
-    
-    .hero-circle-outline {
-      width: clamp(380px, 40vw, 480px);
-      height: clamp(380px, 40vw, 480px);
-      top: 160px;
-      right: 40px;
-    }
-    
-    .hero-circle-gradient,
-    .hero-image-wrapper {
-      width: calc(clamp(380px, 40vw, 480px) - 40px);
-      height: calc(clamp(380px, 40vw, 480px) - 40px);
-      top: 180px;
-      right: 60px;
+    .hero-visual {
+      width: clamp(420px, 38vw, 480px); /* Робимо фото більшим */
+      height: clamp(420px, 38vw, 480px);
     }
     
     .hero-content {
-      max-width: clamp(400px, 45vw, 540px);
-      padding-top: 40px;
+      max-width: 540px; /* Робимо текст ширшим */
+      padding-top: 0;
     }
     
     .hero-heading h1 {
-      font-size: clamp(32px, 4vw, 44px);
+      font-size: 46px; /* Збільшуємо шрифт */
     }
     
     .hero-description {
-      font-size: clamp(16px, 1.8vw, 20px);
-      margin-bottom: 35px;
+      font-size: 20px;
+      margin-bottom: 40px;
     }
-    
+
     .hero-btn {
-      font-size: 17px;
-      padding: 11px 20px;
+      font-size: 18px;
+      padding: 12px 24px;
     }
   }
   
@@ -253,47 +232,33 @@
       padding: 120px 0 60px;
     }
     
-    .hero-bg {
-      position: relative;
-      width: 100%;
+    .hero-container {
+      flex-direction: column;
+      text-align: center;
+      gap: 40px;
+    }
+
+    .hero-visual {
+      order: -1; /* Image first on mobile */
+      width: 350px;
       height: 350px;
-      order: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 40px;
+      margin: 0 auto;
     }
     
     .hero-circle-outline {
       width: 300px;
       height: 300px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      right: auto;
     }
     
     .hero-circle-gradient,
     .hero-image-wrapper {
       width: 260px;
       height: 260px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      right: auto;
-    }
-    
-    .hero-container {
-      display: flex;
-      flex-direction: column;
     }
     
     .hero-content {
       max-width: 100%;
-      padding-top: 0;
-      padding-left: 24px;
-      padding-right: 24px;
-      text-align: center;
+      padding: 0 24px;
     }
     
     .hero-heading h1 {
@@ -309,11 +274,6 @@
       margin: 0 auto 40px;
     }
 
-    .hero-btn {
-      font-size: 18px;
-      padding: 12px 20px;
-    }
-
     .hero-actions {
       justify-content: center;
     }
@@ -324,9 +284,9 @@
       padding: 104px 0 48px;
     }
 
-    .hero-bg {
+    .hero-visual {
+      width: 280px;
       height: 280px;
-      margin-bottom: 32px;
     }
     
     .hero-circle-outline {
@@ -341,8 +301,7 @@
     }
     
     .hero-content {
-      padding-left: 20px;
-      padding-right: 20px;
+      padding: 0 20px;
     }
 
     .hero-heading h1 {

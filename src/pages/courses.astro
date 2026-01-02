@@ -45,10 +45,10 @@ if (currentCategory !== 'all') {
 }
 
 const activeCategory = categories.find(c => c.active);
-const isWorkshopCategory = activeCategory?.name?.toLowerCase().includes('teacher training');
-const isMentorshipCategory = activeCategory?.name?.toLowerCase().includes('mentorship');
-const isSpeakingCategory = activeCategory?.name?.toLowerCase().includes('speaking');
-const isOtherCategory = activeCategory?.name?.toLowerCase().includes('other courses');
+const isWorkshopCategory = activeCategory?.name.toLowerCase().includes('teacher training');
+const isMentorshipCategory = activeCategory?.name.toLowerCase().includes('mentorship');
+const isSpeakingCategory = activeCategory?.name.toLowerCase().includes('speaking');
+const isOtherCategory = activeCategory?.name.toLowerCase().includes('other courses');
 
 const breadcrumb = [
   { label: 'Home', href: '/' },
@@ -94,7 +94,7 @@ const breadcrumb = [
             <p>Workshops are practical, grounded, and focused on real change in the classroom and within teaching teams.</p>
             <div class="workshop-actions">
               <a href="/contact" class="btn-primary">→ Book a workshop</a>
-              <a href="#previous-workshops" class="btn-secondary">See previous workshops</a>
+              <a href="/projects" class="btn-secondary"> See previous workshops</a>
             </div>
           </div>
         )}
@@ -160,7 +160,16 @@ const breadcrumb = [
         <div class="courses-grid" id="courses-grid">
           {filteredCourses.length > 0 ? (
             filteredCourses.map(course => (
-              <CourseCard id={course.id || ''} title={course.title} image={course.image} description={course.description} lessons={course.lessons} duration={course.duration} enrollLink={course.enrollLink} tags={course.tags} />
+              <CourseCard 
+                id={course.id || ''} 
+                title={course.title} 
+                image={course.image} 
+                description={course.description} 
+                lessons={course.lessons} 
+                duration={course.duration} 
+                enrollLink={course.enrollLink} 
+                tags={course.tags} 
+              />
             ))
           ) : (
             (!isWorkshopCategory && !isMentorshipCategory && !isSpeakingCategory && !isOtherCategory) && (

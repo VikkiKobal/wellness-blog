@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	firebase "firebase.google.com/go/v4"
@@ -112,13 +113,21 @@ func main() {
 	admin.HandleFunc("/certificates/{id}", s.deleteCertificate).Methods("DELETE")
 
 	// CORS
-	origins := os.Getenv("CORS_ORIGINS")
-	if origins == "" {
-		origins = "http://localhost:4321"
+	originsStr := os.Getenv("CORS_ORIGINS")
+	if originsStr == "" {
+		originsStr = "http://localhost:4321,http://localhost:3000"
 	}
 	
+	// Split origins by comma and trim whitespace
+	originsList := strings.Split(originsStr, ",")
+	for i, o := range originsList {
+		originsList[i] = strings.TrimSpace(o)
+	}
+	
+	log.Printf("CORS allowed origins: %v", originsList)
+	
 	corsHandler := handlers.CORS(
-		handlers.AllowedOrigins([]string{origins}),
+		handlers.AllowedOrigins(originsList),
 		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
 		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
 		handlers.AllowCredentials(),

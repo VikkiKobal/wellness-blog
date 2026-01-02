@@ -192,13 +192,6 @@ const {
     color: var(--color-text-black);
     line-height: 1.6;
     overflow-x: hidden;
-    padding-top: 80px; /* Offset for fixed header */
-  }
-
-  @media (max-width: 768px) {
-    body {
-      padding-top: 70px;
-    }
   }
 
   /* Smooth page "load-in" */
@@ -225,6 +218,14 @@ const {
   .reveal.is-visible {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  /* Ensure page-hero banner is ALWAYS visible */
+  .page-hero,
+  .page-hero.reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
   }
 
   @media (prefers-reduced-motion: reduce) {
