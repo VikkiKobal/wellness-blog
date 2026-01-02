@@ -2,7 +2,7 @@
 
 A modern personal blog built with Astro and a Go backend, featuring Firebase authentication and a comprehensive admin panel for content management.
 
-## 🚀 Project Structure
+## Project Structure
 
 ```text
 /
@@ -27,7 +27,7 @@ A modern personal blog built with Astro and a Go backend, featuring Firebase aut
 └── package.json
 ```
 
-## 🛠️ Setup
+## Setup
 
 ### Frontend (Astro)
 
@@ -61,7 +61,7 @@ Quick start:
 3. Configure environment variables
 4. Run: `cd backend && go run main.go`
 
-## 🧞 Commands
+## Commands
 
 ### Frontend
 | Command                   | Action                                           |
@@ -78,7 +78,7 @@ Quick start:
 | `cd backend && make run`  | Start server (using Makefile) |
 | `cd backend && make build` | Build the server binary |
 
-## 🔐 Authentication
+## Authentication
 
 The project uses Firebase Authentication with a Go backend for token verification:
 
@@ -88,18 +88,18 @@ The project uses Firebase Authentication with a Go backend for token verificatio
 
 See `src/components/AuthExample.astro` for an example implementation.
 
-## 🎨 Admin Panel
+## Admin Panel
 
 The admin panel (`/admin`) provides a comprehensive interface for managing blog content:
 
 ### Features:
-- ✍️ **Blog Articles Management**
+- **Blog Articles Management**
   - Create, edit, and delete articles
   - Markdown support for rich content
   - Image upload to Firebase Storage
   - Categories and featured articles
   
-- 🎓 **Courses Management**
+-  **Courses Management**
   - Create, edit, and delete courses
   - Multiple categories support
   - Custom tags for target audience
@@ -131,7 +131,7 @@ The admin panel uses Firebase Firestore for data storage:
 - **Collection: `courses`** - Course information with categories and tags
 - **Storage: `articles/` and `courses/`** - Uploaded images
 
-## 📚 API Endpoints
+## API Endpoints
 
 - `GET /api/health` - Health check
 - `POST /api/auth/verify` - Verify Firebase ID token
@@ -140,7 +140,7 @@ The admin panel uses Firebase Firestore for data storage:
 
 See [backend/README.md](./backend/README.md) for full API documentation.
 
-## 👀 Want to learn more?
+## Want to learn more?
 
 - [Astro Documentation](https://docs.astro.build)
 - [Firebase Documentation](https://firebase.google.com/docs)
