@@ -145,7 +145,7 @@ func (s *Server) getCourses(w http.ResponseWriter, r *http.Request) {
 	courses := []Course{}
 	for rows.Next() {
 		var c Course
-		err := rows.Scan(&c.ID, &c.Title, &c.Description, &c.Lessons, &c.Duration, &c.Price, &c.Category, pq.Array(&c.Tags), &c.Image, &c.CreatedAt, &c.UpdatedAt)
+		err := rows.Scan(&c.ID, &c.Title, &c.Description, &c.Lessons, &c.Duration, &c.EnrollLink, &c.Category, pq.Array(&c.Tags), &c.Image, &c.CreatedAt, &c.UpdatedAt)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -172,7 +172,7 @@ func (s *Server) createCourse(w http.ResponseWriter, r *http.Request) {
 
 	err := db.QueryRow(
 		"INSERT INTO courses (title, description, lessons, duration, price, category, tags, image) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, created_at, updated_at",
-		c.Title, c.Description, c.Lessons, c.Duration, c.Price, c.Category, pq.Array(c.Tags), c.Image,
+		c.Title, c.Description, c.Lessons, c.Duration, c.EnrollLink, c.Category, pq.Array(c.Tags), c.Image,
 	).Scan(&c.ID, &c.CreatedAt, &c.UpdatedAt)
 
 	if err != nil {
@@ -197,7 +197,7 @@ func (s *Server) updateCourse(w http.ResponseWriter, r *http.Request) {
 
 	_, err := db.Exec(
 		"UPDATE courses SET title=$1, description=$2, lessons=$3, duration=$4, price=$5, category=$6, tags=$7, image=$8, updated_at=CURRENT_TIMESTAMP WHERE id=$9",
-		c.Title, c.Description, c.Lessons, c.Duration, c.Price, c.Category, pq.Array(c.Tags), c.Image, id,
+		c.Title, c.Description, c.Lessons, c.Duration, c.EnrollLink, c.Category, pq.Array(c.Tags), c.Image, id,
 	)
 
 	if err != nil {

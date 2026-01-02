@@ -6,7 +6,7 @@ interface Props {
   description?: string;
   lessons?: string;
   duration?: string;
-  price?: string;
+  enrollLink?: string;
   tags?: string[];
   buttonText?: string;
 }
@@ -18,9 +18,9 @@ const {
   description = "Learn how to use reflection for personal and professional growth, analyze experiences, and improve decision-making skills.",
   lessons = "12 Lessons", 
   duration = "4 Weeks",
-  price = "$59",
+  enrollLink = "",
   tags = ["students", "professionals", "anyone seeking self-improvement"],
-  buttonText = "Join Class",
+  buttonText = "Enroll",
 } = Astro.props;
 
 // Create JSON data for the modal
@@ -28,7 +28,7 @@ const courseData = JSON.stringify({
   title,
   description,
   image,
-  price,
+  enrollLink,
   tags
 });
 ---
@@ -54,9 +54,15 @@ const courseData = JSON.stringify({
         {duration}
       </span>
     </div>
-    <button type="button" class="course-btn">
-      {buttonText}
-    </button>
+    {enrollLink ? (
+      <a href={enrollLink} target="_blank" class="course-btn" onclick="event.stopPropagation();">
+        {buttonText}
+      </a>
+    ) : (
+      <button type="button" class="course-btn">
+        {buttonText}
+      </button>
+    )}
   </div>
 </article>
 

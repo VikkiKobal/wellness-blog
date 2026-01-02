@@ -120,7 +120,6 @@ const valueItems = [
               <a href="https://www.uzhnu.edu.ua/uk/infocentre/80899" target="_blank" rel="noopener noreferrer" class="view-more-certs">
                 More certificates on UzhNU portal →
               </a>
-              <div class="timeline-line"></div>
             </div>
             
             <div class="certificates-outer-wrapper">
@@ -135,18 +134,22 @@ const valueItems = [
                 <div class="certificates-slider" id="cert-slider">
                   {certificates.map(cert => (
                     <div class="cert-card" data-full={cert.image}>
-                      <div class="cert-year">{cert.year}</div>
+                      <div class="cert-year-badge">{cert.year}</div>
                       <div class="cert-image-wrapper">
                         <img src={cert.image} alt={cert.title} loading="lazy" />
                         <div class="cert-overlay">
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15 3H21V9M21 3L14 10M9 21H3V15M3 21L10 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
+                          <div class="view-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                              <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <span>View</span>
+                          </div>
                         </div>
                       </div>
                       <div class="cert-info">
+                        <div class="cert-issuer">{cert.issuer}</div>
                         <h4>{cert.title}</h4>
-                        <span>{cert.issuer}</span>
                       </div>
                     </div>
                   ))}
@@ -342,7 +345,7 @@ const valueItems = [
     font-family: var(--font-primary);
     font-weight: 500;
     font-size: 22px;
-    line-height: 0.87;
+    line-height: 1.2;
     color: var(--color-primary);
     text-align: center;
     white-space: nowrap;
@@ -419,16 +422,16 @@ const valueItems = [
     color: var(--color-primary);
     transition: color 0.3s ease;
   }
-
+  
   .social-link :global(.rg-text sup) {
     font-size: 8px;
     vertical-align: super;
   }
-
+  
   .social-link:hover :global(.rg-text) {
     color: var(--color-white);
   }
-
+  
   .approach-section {
     padding: 0px 0 120px;
     background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(234,246,243,0.6) 100%);
@@ -444,6 +447,24 @@ const valueItems = [
   .certificates-outer-wrapper {
     position: relative;
     width: 100%;
+    padding: 20px 0;
+  }
+
+  .certificates-outer-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, 
+      rgba(141, 119, 171, 0) 0%, 
+      rgba(141, 119, 171, 0.2) 15%, 
+      rgba(141, 119, 171, 0.2) 85%, 
+      rgba(141, 119, 171, 0) 100%
+    );
+    z-index: 0;
+    transform: translateY(-50%);
   }
 
   .certificates-header {
@@ -452,7 +473,7 @@ const valueItems = [
   }
 
   .certificates-header h3 {
-    font-size: 32px;
+    font-size: 34px;
     color: var(--color-primary);
     margin-bottom: 10px;
     font-family: var(--font-primary);
@@ -461,7 +482,7 @@ const valueItems = [
   .view-more-certs {
     display: inline-block;
     font-family: var(--font-secondary);
-    font-size: 14px;
+    font-size: 18px;
     color: var(--color-primary);
     text-decoration: none;
     margin-bottom: 5px;
@@ -475,23 +496,17 @@ const valueItems = [
     transform: translateX(5px);
   }
 
-  .timeline-line {
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(141, 119, 171, 0.3) 50%, transparent 100%);
-    width: 100%;
-    position: relative;
-    margin-top: 15px;
-  }
-
   .certificates-slider-container {
     overflow-x: auto;
-    padding: 40px 20px 30px;
+    padding: 0px 20px 30px;
     cursor: grab;
     scrollbar-width: none;
     -ms-overflow-style: none;
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    position: relative;
+    z-index: 1;
   }
 
   .certificates-slider-container::-webkit-scrollbar {
@@ -573,105 +588,92 @@ const valueItems = [
     }
 
     .cert-card {
-      flex: 0 0 85vw;
-      max-width: 300px;
-      padding: 10px 10px 20px;
-      scroll-snap-align: center;
+      flex: 0 0 280px;
+      padding: 16px;
+    }
+
+    .cert-year-badge {
+      width: 50px;
+      height: 50px;
+      font-size: 12px;
+      top: -10px;
+      right: -10px;
     }
 
     .cert-image-wrapper {
-      height: 170px;
+      height: 180px;
     }
-
-    .cert-card:nth-child(odd) { margin-top: -10px; }
-    .cert-card:nth-child(even) { margin-top: 10px; }
   }
 
   .certificates-slider {
     display: flex;
     gap: 40px;
-    padding-left: 10px;
-    align-items: center;
+    padding: 40px 10px;
+    align-items: stretch;
   }
 
   .cert-card {
-    flex: 0 0 300px;
+    flex: 0 0 320px;
     background: var(--color-white);
-    padding: 12px 12px 24px;
-    border-radius: 4px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05), 0 1px 8px rgba(0,0,0,0.02);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     position: relative;
-    transform: rotate(var(--rotation, 0deg));
-    animation: float 6s ease-in-out infinite;
-    animation-delay: var(--delay, 0s);
+    display: flex;
+    flex-direction: column;
     scroll-snap-align: center;
-  }
-
-  .cert-card::before {
-    content: '';
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%) rotate(-2deg);
-    width: 70px;
-    height: 25px;
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(2px);
     border: 1px solid rgba(141, 119, 171, 0.1);
-    z-index: 10;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  }
-
-  /* Give random-like rotations and delays to cards */
-  .cert-card:nth-child(odd) { --rotation: -1.5deg; --delay: 0s; margin-top: -20px; }
-  .cert-card:nth-child(even) { --rotation: 1.5deg; --delay: -2s; margin-top: 20px; }
-  .cert-card:nth-child(3n) { --rotation: 1deg; --delay: -4s; }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0) rotate(var(--rotation)); }
-    50% { transform: translateY(-10px) rotate(calc(var(--rotation) + 0.5deg)); }
   }
 
   .cert-card:hover {
-    transform: translateY(-15px) rotate(0deg) scale(1.02) !important;
-    animation-play-state: paused;
+    transform: translateY(-12px);
     box-shadow: 0 20px 40px rgba(141, 119, 171, 0.15);
-    z-index: 20;
+    border-color: var(--color-primary);
   }
 
-  .cert-year {
+  .cert-year-badge {
     position: absolute;
     top: -15px;
     right: -15px;
+    width: 60px;
+    height: 60px;
     background: var(--color-primary);
     color: white;
-    width: 50px;
-    height: 50px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
     font-size: 14px;
-    box-shadow: 0 4px 10px rgba(141, 119, 171, 0.3);
-    z-index: 5;
-    border: 3px solid var(--color-white);
+    box-shadow: 0 4px 12px rgba(141, 119, 171, 0.4);
+    z-index: 10;
+    border: 4px solid var(--color-white);
+    transition: transform 0.3s ease;
+  }
+
+  .cert-card:hover .cert-year-badge {
+    transform: scale(1.1) rotate(5deg);
   }
 
   .cert-image-wrapper {
     position: relative;
-    height: 200px;
-    background: #f8f8f8;
+    height: 220px;
+    background: #ffffff;
     overflow: hidden;
-    margin-bottom: 20px;
-    border: 1px solid #eee;
+    margin-bottom: 24px;
+    border-radius: 10px;
+    border: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .cert-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    padding: 12px;
     transition: transform 0.6s ease;
   }
 
@@ -681,35 +683,66 @@ const valueItems = [
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(141, 119, 171, 0.2);
+    background: rgba(141, 119, 171, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
     opacity: 0;
-    transition: opacity 0.3s ease;
-    backdrop-filter: blur(2px);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+  }
+
+  .cert-card:hover .cert-overlay {
+    opacity: 1;
+  }
+
+  .view-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+  }
+
+  .cert-card:hover .view-icon {
+    transform: translateY(0);
+  }
+
+  .view-icon span {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
   }
 
   .cert-info {
-    padding: 0 10px;
-    text-align: left;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cert-issuer {
+    font-size: 13px;
+    color: var(--color-primary);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+    font-family: var(--font-secondary);
   }
 
   .cert-info h4 {
     font-family: var(--font-primary);
-    font-size: 17px;
-    font-weight: 600;
-    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0;
     color: var(--color-text-dark);
-    line-height: 1.3;
-  }
-
-  .cert-info span {
-    display: block;
-    font-size: 13px;
-    color: var(--color-text-muted);
-    font-family: var(--font-secondary);
-    letter-spacing: 0.02em;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   /* Lightbox */
@@ -955,4 +988,3 @@ const valueItems = [
     }
   }
 </style>
-

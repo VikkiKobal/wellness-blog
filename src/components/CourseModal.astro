@@ -10,17 +10,17 @@
         <path d="M8 8L18 18M18 8L8 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       </svg>
     </button>
-    
+
     <div class="modal-body">
       <div class="modal-image">
         <img id="modal-course-image" src="" alt="" />
       </div>
-      
+
       <div class="modal-info">
         <h2 id="modal-title" class="modal-title"></h2>
-        
+
         <p id="modal-description" class="modal-description"></p>
-        
+
         <div class="useful-for">
           <span class="useful-label">Useful for:</span>
           <div class="tags" id="modal-tags">
@@ -29,13 +29,11 @@
             <span class="tag">anyone seeking self-improvement</span>
           </div>
         </div>
-        
+
         <div class="modal-actions">
-          <button class="buy-btn">
-            <span class="buy-text">Buy</span>
-            <span class="btn-divider"></span>
-            <span id="modal-price" class="price">$59</span>
-          </button>
+          <a id="modal-enroll-btn" href="#" target="_blank" class="enroll-btn">
+            Enroll Now
+          </a>
         </div>
       </div>
     </div>
@@ -60,12 +58,12 @@
     transition: all 0.3s ease;
     padding: 20px;
   }
-  
+
   .modal-overlay.active {
     opacity: 1;
     visibility: visible;
   }
-  
+
   .modal-content {
     background: var(--color-background);
     border: 1px solid var(--color-primary);
@@ -78,11 +76,11 @@
     transform: scale(0.9) translateY(20px);
     transition: transform 0.3s ease;
   }
-  
+
   .modal-overlay.active .modal-content {
     transform: scale(1) translateY(0);
   }
-  
+
   .modal-close {
     position: absolute;
     top: 20px;
@@ -95,37 +93,37 @@
     padding: 0;
     transition: all 0.3s ease;
   }
-  
+
   .modal-close:hover {
     color: var(--color-primary-dark);
     transform: rotate(90deg);
   }
-  
+
   .modal-body {
     display: grid;
     grid-template-columns: 300px 1fr;
     min-height: 450px;
   }
-  
+
   .modal-image {
     background: var(--color-primary);
     border-radius: 18px 0 0 18px;
     overflow: hidden;
   }
-  
+
   .modal-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  
+
   .modal-info {
     padding: 50px 60px 50px 50px;
     display: flex;
     flex-direction: column;
     gap: 24px;
   }
-  
+
   .modal-title {
     font-family: var(--font-primary);
     font-weight: 600;
@@ -135,7 +133,7 @@
     margin: 0;
     padding-right: 40px;
   }
-  
+
   .modal-description {
     font-family: var(--font-secondary);
     font-weight: 400;
@@ -144,14 +142,14 @@
     color: #454545;
     margin: 0;
   }
-  
+
   .useful-for {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 12px;
   }
-  
+
   .useful-label {
     font-family: var(--font-secondary);
     font-weight: 400;
@@ -159,13 +157,13 @@
     line-height: 1.85;
     color: var(--color-text-black);
   }
-  
+
   .tags {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
   }
-  
+
   .tags :global(.tag),
   .tag {
     display: inline-flex;
@@ -179,91 +177,64 @@
     line-height: 1.85;
     color: var(--color-text-black);
   }
-  
+
   .modal-actions {
     display: flex;
     align-items: center;
     gap: 16px;
     margin-top: auto;
   }
-  
-  .buy-btn {
+
+  .enroll-btn {
     display: flex;
-    align-items: stretch;
-    padding: 0;
-    background: none;
-    border: 2px solid var(--color-primary);
+    align-items: center;
+    justify-content: center;
+    padding: 14px 40px;
+    background: var(--color-primary);
+    color: white;
+    border: none;
     border-radius: 14px;
-    overflow: hidden;
+    text-decoration: none;
+    font-family: var(--font-secondary);
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1;
     cursor: pointer;
     transition: all 0.3s ease;
     min-width: 220px;
   }
-  
-  .buy-btn:hover {
+
+  .enroll-btn:hover {
+    background: var(--color-primary-dark);
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(141, 119, 171, 0.2);
   }
-  
-  .btn-divider {
-    width: 2px;
-    background: var(--color-primary);
-    align-self: stretch;
-  }
-  
-  .buy-text {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 24px;
-    background: var(--color-primary);
-    font-family: var(--font-secondary);
-    font-weight: 700;
-    font-size: 18px;
-    line-height: 1;
-    color: white;
-  }
-  
-  .price {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 24px;
-    background: transparent;
-    font-family: var(--font-secondary);
-    font-weight: 700;
-    font-size: 18px;
-    line-height: 1;
-    color: var(--color-primary);
-  }
-  
+
   @media (max-width: 900px) {
     .modal-body {
       grid-template-columns: 1fr;
     }
-    
+
     .modal-image {
       height: 200px;
       border-radius: 18px 18px 0 0;
     }
-    
+
     .modal-info {
       padding: 30px;
     }
-    
+
     .modal-title {
       font-size: 22px;
     }
   }
-  
+
   @media (max-width: 600px) {
     .modal-content {
       max-height: 95vh;
       border-radius: 12px;
     }
-    
+
     .modal-image {
       height: 160px;
       border-radius: 12px 12px 0 0;
@@ -273,47 +244,40 @@
       padding: 20px;
       gap: 16px;
     }
-    
+
     .modal-title {
       font-size: 18px;
       padding-right: 30px;
     }
-    
+
     .modal-description {
       font-size: 14px;
     }
-    
+
     .modal-close {
       top: 12px;
       right: 12px;
     }
-    
+
     .modal-close svg {
       width: 20px;
       height: 20px;
     }
-    
+
     .useful-for {
       flex-direction: column;
       align-items: flex-start;
     }
-    
+
     .tag {
       font-size: 12px;
       padding: 3px 12px;
     }
-    
-    .buy-btn {
-      min-width: 180px;
-    }
-    
-    .buy-text, .price {
-      font-size: 15px;
-      padding: 10px 16px;
-    }
-    
-    .btn-divider {
-      width: 1px;
+
+    .enroll-btn {
+      min-width: 100%;
+      font-size: 16px;
+      padding: 12px 24px;
     }
   }
 </style>
@@ -323,66 +287,72 @@
   const modal = document.getElementById('course-modal');
   const closeBtn = modal?.querySelector('.modal-close');
   const overlay = modal;
-  
+
   // Function to open modal with course data
   function openCourseModal(courseData: {
     title: string;
     description: string;
     image: string;
-    price: string;
+    enrollLink?: string;
     tags?: string[];
   }) {
     if (!modal) return;
-    
+
     const titleEl = document.getElementById('modal-title');
     const descEl = document.getElementById('modal-description');
     const imageEl = document.getElementById('modal-course-image') as HTMLImageElement;
-    const priceEl = document.getElementById('modal-price');
+    const enrollBtn = document.getElementById('modal-enroll-btn') as HTMLAnchorElement;
     const tagsEl = document.getElementById('modal-tags');
-    
+
     if (titleEl) titleEl.textContent = courseData.title;
     if (descEl) descEl.textContent = courseData.description;
     if (imageEl) {
       imageEl.src = courseData.image;
       imageEl.alt = courseData.title;
     }
-    if (priceEl) priceEl.textContent = courseData.price;
-    
+    if (enrollBtn) {
+      enrollBtn.href = courseData.enrollLink || '#';
+      if (!courseData.enrollLink) {
+        enrollBtn.style.display = 'none';
+      } else {
+        enrollBtn.style.display = 'flex';
+      }
+    }
+
     if (tagsEl && courseData.tags) {
-      tagsEl.innerHTML = courseData.tags.map(tag => 
+      tagsEl.innerHTML = courseData.tags.map(tag =>
         `<span class="tag" style="display: inline-flex; align-items: center; padding: 4px 16px; background: #E1EACD; border-radius: 16px; font-size: 14px; line-height: 1.85; color: #000;">${tag}</span>`
       ).join('');
     }
-    
+
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
-  
+
   // Function to close modal
   function closeCourseModal() {
     if (!modal) return;
     modal.classList.remove('active');
     document.body.style.overflow = '';
   }
-  
+
   // Close button click
   closeBtn?.addEventListener('click', closeCourseModal);
-  
+
   // Click outside to close
   overlay?.addEventListener('click', (e) => {
     if (e.target === overlay) {
       closeCourseModal();
     }
   });
-  
+
   // Escape key to close
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && modal?.classList.contains('active')) {
       closeCourseModal();
     }
   });
-  
+
   // Expose function globally
   (window as any).openCourseModal = openCourseModal;
 </script>
-

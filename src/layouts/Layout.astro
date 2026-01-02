@@ -192,6 +192,13 @@ const {
     color: var(--color-text-black);
     line-height: 1.6;
     overflow-x: hidden;
+    padding-top: 80px; /* Offset for fixed header */
+  }
+
+  @media (max-width: 768px) {
+    body {
+      padding-top: 70px;
+    }
   }
 
   /* Smooth page "load-in" */

@@ -9,8 +9,8 @@ import (
 )
 
 // AuthMiddleware verifies Firebase ID token from Authorization header and checks for admin rights
-func (s *Server) AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (s *Server) AuthMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
 			http.Error(w, "Authorization header is required", http.StatusUnauthorized)
@@ -69,13 +69,13 @@ func (s *Server) AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		ctx = context.WithValue(ctx, "userID", decodedToken.UID)
 		ctx = context.WithValue(ctx, "token", decodedToken)
 
-		next(w, r.WithContext(ctx))
-	}
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
 }
 
 // OptionalAuthMiddleware allows requests with or without authentication
-func (s *Server) OptionalAuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+func (s *Server) OptionalAuthMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		if authHeader != "" {
 			token := strings.TrimPrefix(authHeader, "Bearer ")
@@ -89,8 +89,8 @@ func (s *Server) OptionalAuthMiddleware(next http.HandlerFunc) http.HandlerFunc 
 				}
 			}
 		}
-		next(w, r)
-	}
+		next.ServeHTTP(w, r)
+	})
 }
 
 

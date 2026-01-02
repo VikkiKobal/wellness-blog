@@ -125,7 +125,7 @@ type Course struct {
 	Description string    `json:"description"`
 	Lessons     string    `json:"lessons"`
 	Duration    string    `json:"duration"`
-	Price       string    `json:"price"`
+	EnrollLink  string    `json:"enrollLink"`
 	Category    string    `json:"category"`
 	Tags        []string  `json:"tags"`
 	Image       string    `json:"image"`

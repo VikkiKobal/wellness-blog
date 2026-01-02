@@ -268,7 +268,7 @@ const loadCourses = async () => {
       li.innerHTML = `
         <div class="article-preview"><img src="${imageUrl}" alt="${course.title}" class="article-thumbnail" /></div>
         <div class="content-info">
-          <div class="article-header"><strong>${course.title}</strong><div class="article-badges"><span class="badge badge-category">🏷️ ${course.category}</span><span class="badge badge-price">${course.price}</span></div></div>
+          <div class="article-header"><strong>${course.title}</strong><div class="article-badges"><span class="badge badge-category">🏷️ ${course.category}</span><span class="badge badge-enroll">🔗 Enroll: ${course.enrollLink ? (course.enrollLink.length > 30 ? course.enrollLink.substring(0, 30) + '...' : course.enrollLink) : 'No link'}</span></div></div>
           <p class="article-excerpt">${course.description || 'No description'}</p>
           <div class="content-meta"><span class="content-tag">📚 ${course.lessons}</span><span class="content-tag">⏱️ ${course.duration}</span></div>
           <div class="course-tags">${course.tags?.map(tag => `<span class="tag-chip">${tag}</span>`).join('') || ''}</div>
@@ -293,7 +293,7 @@ const saveCourse = async (e: Event) => {
     description: formData.get('description')?.toString().trim() || '',
     lessons: formData.get('lessons')?.toString().trim() || '',
     duration: formData.get('duration')?.toString().trim() || '',
-    price: formData.get('price')?.toString().trim() || '',
+    enrollLink: formData.get('enrollLink')?.toString().trim() || '',
     category: formData.get('category')?.toString().trim() || '',
     tags: formData.get('tags')?.toString().split('\n').map(t => t.trim()).filter(t => t) || [],
     image: formData.get('image')?.toString().trim() || '/images/service-1.png',
@@ -311,7 +311,7 @@ const editCourse = (course: api.Course) => {
   (courseForm.elements.namedItem('description') as HTMLTextAreaElement).value = course.description;
   (courseForm.elements.namedItem('lessons') as HTMLInputElement).value = course.lessons;
   (courseForm.elements.namedItem('duration') as HTMLInputElement).value = course.duration;
-  (courseForm.elements.namedItem('price') as HTMLInputElement).value = course.price;
+  (courseForm.elements.namedItem('enrollLink') as HTMLInputElement).value = course.enrollLink || '';
   (courseForm.elements.namedItem('category') as HTMLSelectElement).value = course.category;
   (courseForm.elements.namedItem('tags') as HTMLTextAreaElement).value = course.tags?.join('\n') || '';
   if (courseImageUrl) courseImageUrl.value = course.image;

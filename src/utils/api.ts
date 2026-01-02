@@ -2,7 +2,11 @@
  * API utility functions for communicating with the Go backend
  */
 
-const API_BASE_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:8080/api';
+// Use INTERNAL_API_URL on server-side (Docker), and PUBLIC_API_URL on client-side (browser)
+const isServer = typeof window === 'undefined';
+const API_BASE_URL = isServer 
+  ? (import.meta.env.INTERNAL_API_URL || import.meta.env.PUBLIC_API_URL || 'http://localhost:8080/api')
+  : (import.meta.env.PUBLIC_API_URL || 'http://localhost:8080/api');
 
 export interface User {
   uid: string;
@@ -190,7 +194,7 @@ export interface Course {
   description: string;
   lessons: string;
   duration: string;
-  price: string;
+  enrollLink: string;
   category: string;
   tags: string[];
   image: string;
